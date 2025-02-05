@@ -124,6 +124,7 @@ code: |
   set_progress(32)
   user_has_attorney
   if user_has_attorney:
+    attorney_screening_kickout
     attorneys.gather()
     attorneys[0].address.address
   nav.set_section('other_party')
@@ -179,30 +180,38 @@ id: basic questions intro screen
 decoration: form-lineal
 question: |
   ${interview_short_title}
-subquestion: |  
-
+subquestion: |   
   <p>${ intro_vtcourtforms_3_steps }</p>
   
-  <i class="fas fa-file-text fa-2x"></i> This tool will produce a completed Small Claims Complaint for Vermont courts — form 100-00257.
-  
-    <i class="fas fa-clock fa-2x"></i>  It may take you between 10 and 20 minutes to complete this. If you want, you can create an account and save your work to return to later.
+  <i class="fas fa-file-text fa-2x"></i> This tool will produce a completed Small Claims Complaint form 100-00257 for Vermont courts. It is used when you want to sue a person, business or organization for $10,000 or less.
 
-  <i class="fas fa-circle-info fa-2x"></i> It is free to use this tool. This site is not a lawyer.
+  <i class="fas fa-envelope fa-2x"></i> The tool will also give you some blank forms that you will send to the person, business or organization in a later step in the small claims process. We will give you instructions at the end in the Next Steps document.
   
-  Visit the [VTLawHelp.org website](https://vtlawhelp.org) for information about civil legal issues.
+  <i class="fas fa-clock fa-2x"></i> It may take you 30 minutes to complete this.
+
+  <i class="fas fa-circle-info fa-2x"></i> It is free to use this program. This site is not a lawyer. Visit our [VTLawHelp.org website](https://vtlawhelp.org/) for legal information.
+
+  Learn about the small claims court process on our Small Claims Roadmap on the [VTLawHelp.org website](https://vtlawhelp.org/roadmap/small-claims/step-1).
 
   <p>${ intro_vtcourtforms_created_by }</p>
 
 continue button field: al_intro_screen
-  Most people take about 15 minutes to complete this interview.
 ---
 id: VT small claims intro
 continue button field: VT_small_claims_intro
 question: |
-  Is this tool right for you?
+  About this tool
 subquestion: | 
+  To use this tool, you will need to:
 
-  <p>Ask for general help with court forms or the court process by contacting the <a href="https://www.vermontjudiciary.org/self-help/ARC">Vermont Judiciary Access and Resource Center.</a> Their services are free and they serve the whole state. They do NOT give legal advice.</p>
+  - read about the full small claims process on our Small Claims Roadmap at: [https://vtlawhelp.org/roadmap/small-claims/step-1](https://vtlawhelp.org/roadmap/small-claims/step-1).
+  - know the name and address of the person, business or organization that you want to sue for $10,000 or less
+  - make a list of each reason they owe you money or caused you to lose money. These are your “damages.”
+  - come up with a total amount you want to sue for (You can include more than one dispute with the same defendant in your lawsuit, if the total amount you are asking for is $10,000 or less.)
+  - be prepared to pay a court filing fee of $60 or $90, depending on the amount you are suing for
+  - or, be prepared to submit a fee waiver form to the court at the same time that you submit your Small Claims Complaint. (See our Small Claims Roadmap for details: [https://vtlawhelp.org/roadmap/small-claims/step-2](https://vtlawhelp.org/roadmap/small-claims/step-2))
+
+  Ask for general help with court forms or the court process by contacting the [Vermont Judiciary Access and Resource Center](https://www.vermontjudiciary.org/self-help/ARC). Their services are free and they serve the whole state. They do NOT give legal advice.
 
   <h4>Our terms of use</h4>
 fields:
@@ -281,14 +290,18 @@ buttons:
 id: fee screening
 question: |
   Are you aware of the court filing fee? Or do you plan to fill out a form to ask for a fee waiver?
+subquestion: |
+  If you would like to ask for a fee waiver, we will help you navigate to the VTCourtForms Fee Waiver Interview once you have completed your small claims complaint.
 fields:
   - no label: fee_screening
     datatype: yesnoradio
 ---
 id: fee screening kickout
 question: |
-  There is a filing fee for small claims court. In 2024 it was $65 for claims for $1,000 or less, or $90 for claims more than $1,000. You can pay the court with cash, check or money order.
+  There is a filing fee for small claims court.
 subquestion: |
+  In 2024 it was $65 for claims for $1,000 or less, or $90 for claims more than $1,000. You can pay the court with cash, check or money order.
+  
   Do you want to continue?
 continue button field: fee_screening_kickout
 buttons:
@@ -314,6 +327,17 @@ fields:
     datatype: yesnoradio
   - note: |
       Usually, the people who use this guided interview do **not** have a lawyer. If you are represented by a lawyer, the lawyer usually files court paperwork for you. Ask them about this.
+---
+id: attorney screening kickout
+question: |
+  Your attorney needs to fill out this form.
+subquestion: |
+  **Stop** now and come back with your attorney.
+  
+  You can create a free account so you can save your answers and come back later with your attorney. Choose **sign up** in the Menu above, or **register** below.
+
+  If your attorney is with you hit **Next** to complete your small claims complaint.
+continue button field: attorney_screening_kickout
 ---
 ############################### DEFENDANT INFO ###############################
 ---
@@ -353,7 +377,8 @@ question: |
 fields:
   - "How much are you suing for?": claim_principal
     datatype: currency
-    min: 0
+    min: 1
+    max: 10000.00
 ---
 id: claim interest
 question: |
@@ -365,18 +390,27 @@ fields:
 ---
 id: claim court costs
 question: |
-  What are your court costs for filing this case?
+  Court fee
 subquestion: |
-  * If your claim is $1,000 or less the fee will be $65.00.
-  * If your claim is more than $1,000 the fee will be $90.00.
-field: claim_court_costs
-datatype: currency
-choices:
-  - 65
-  - 90
+  Your court fee will be automatically entered on your documents based on the total you are suing for.
+  
+  * If your claim is $1,000 or less the fee will be $65.
+  * If your claim is more than $1,000 the fee will be $90.
+
+  If you want to apply for a fee waiver, you will be able to navigate to the VTCourtForms Fee Waiver Interview on the download screen where you receive your small claims forms.
+  
+continue button field: claim_court_costs
 ---
+### Code to get court fee amount ####
 code: |
-  claim_amount_total = claim_principal + claim_interest + claim_court_costs
+  if claim_principal > 1000:
+    claim_court_fee = 90
+  else:
+    claim_court_fee = 65
+---
+### Code to get total claim amount ###
+code: |
+  claim_amount_total = claim_principal + claim_interest + claim_court_fee
 ---
 id: complaint description
 question: |
@@ -433,6 +467,31 @@ review:
       **In your own words, describe what happened.**:
       > ${ single_paragraph(complaint_description) }
 ---
+id: Signing your forms
+question: |
+  Signature date
+fields:
+  - "This is how your name will appear under your signature.": printed_signature
+    default: |
+        ${ default_printed_signature }
+    maxlength: 34
+
+  - "Date of your signature for these forms": signature_date
+    datatype: date
+    required: False
+    default: |
+      ${ today() }
+  -  note: |
+       You can change this date later if you want.
+       
+       **Tap Next to choose how to sign your documents.**
+---
+code: |
+  if user_has_attorney:
+    default_printed_signature = attorneys[0].name
+  else:
+    default_printed_signature = users[0].name
+---
 ##################### DOWNLOAD SCREEN #####################
 ---
 id: download screen
@@ -457,37 +516,37 @@ subquestion: |
   ${ collapse_template(not_seeing_email) }
   ${ collapse_template(log_out_when_done) }
 
+  If you receive public benefits or your income is less than 150% of the Federal Poverty Level, the court may be able to waive your filing fees.
+  
+  If you would like to ask the court to waive your filing fees and service costs you can use VTCourtForms [Fee Waiver Interview](https://apps.vtcourtforms.org/run/VTFeeWaiver/#/1). 
+  
+  **Before starting your fee waiver application:**
+  
+  - Make sure you have saved all the documents you need for your small claims complaint.
+
 progress: 100
----
-##################### DEFAULTS FOR DRAFT PDF VARIABLES #####################
-code: |
-  default_judgement_date = "DRAFT"
-  financial_disclosure_order_date = "DRAFT"
-  motion_for_default_judgement_date = "DRAFT"
-  notice_of_appeal_date = "DRAFT"
-  other_description = "DRAFT"
 ---
 ##################### ATTACHMENTS #####################
 ---
 objects:
   - VT_small_claims_complaint_attachment: ALDocument.using(title="Vermont small claims complaint form 100-00257", filename="small_claims_complaint_with_info_100_00257.pdf", enabled=True, has_addendum=False)
   - VT_small_claims_certificate_of_service_attachment: ALDocument.using(title="Vermont small claims certificate of service form 100-00260", filename="small_claims_certificate_of_service_100_00260.pdf", enabled=True, has_addendum=False)
-  - VT_small_claims_information_and_instructions_for_defendant_attachment: ALDocument.using(title="Vermont small claims information and instructions for defendant form 100-00259", filename="100-00259._Small_Claims_Information_and_Instructions_for_Defendant.pdf", has_addendum=False)
-  - VT_small_claims_disclosure_of_exempt_income_attachment: ALDocument.using(title="Vermont small claims disclosure of exempt income form 100-00128", filename="100-00128._Disclosure_of_Exempt_Income.pdf", has_addendum=False)
-  - VT_small_claims_answer_attachment: ALDocument.using(title="Vermont small claims answer form 100-00126", filename="100-00126._Small_Claims_Answer.pdf", has_addendum=False)
+  - VT_small_claims_information_and_instructions_for_defendant_attachment: ALDocument.using(title="Vermont small claims information and instructions for defendant form 100-00259", filename="Small_Claims_Information_and_Instructions_for_Defendant_100_00259.pdf", has_addendum=False)
+  - VT_small_claims_disclosure_of_exempt_income_attachment: ALDocument.using(title="Vermont small claims disclosure of exempt income form 100-00128", filename="Disclosure_of_Exempt_Income_100_00128.pdf", has_addendum=False)
+  - VT_small_claims_answer_attachment: ALDocument.using(title="Vermont small claims answer form 100-00126", filename="Small_Claims_Answer_100_00126.pdf", has_addendum=False)
 ---
 code: |
   VT_small_claims_information_and_instructions_for_defendant_attachment.enabled = True
-  VT_small_claims_disclosure_of_exempt_income_attachment.enabled = True
   VT_small_claims_answer_attachment.enabled = True
+  VT_small_claims_disclosure_of_exempt_income_attachment.enabled = True
 ---
 objects:
   - al_user_bundle: ALDocumentBundle.using(elements=[
       VT_small_claims_complaint_attachment, 
       VT_small_claims_certificate_of_service_attachment, 
-      VT_small_claims_information_and_instructions_for_defendant_attachment, 
-      VT_small_claims_disclosure_of_exempt_income_attachment, 
-      VT_small_claims_answer_attachment], 
+      VT_small_claims_information_and_instructions_for_defendant_attachment,
+      VT_small_claims_answer_attachment,
+      VT_small_claims_disclosure_of_exempt_income_attachment], 
       filename="VT_small_claims", title="Download all forms", enabled=True)
   - al_court_bundle: ALDocumentBundle.using(elements=[
       VT_small_claims_complaint_attachment], 
@@ -516,18 +575,14 @@ attachments:
       - "other_parties1_address_line_one": ${ other_parties[0].address.line_one() }
       - "other_parties1_address_line_two": ${ other_parties[0].address.line_two() }
       - "other_parties1_birthdate": ${ format_date(other_parties[0].birthdate, format='M/d/yyyy') }
-      - "claim_amount_principal": ${ claim_principal }
-      - "claim_amount_interest": ${ claim_interest }
-      - "claim_amount_court_costs": ${ claim_court_costs }
-      - "claim_amount_total": ${ claim_amount_total }
+      - "claim_amount_principal": ${ thousands(claim_principal,show_decimals=True) }
+      - "claim_amount_interest": ${ thousands(claim_interest,show_decimals=True) }
+      - "claim_amount_court_costs": ${ thousands(claim_court_fee,show_decimals=True) }
+      - "claim_amount_total": ${ thousands(claim_amount_total,show_decimals=True) }
       - "complaint_description": ${ complaint_description }
       - "signature_date": ${ signature_date }
       - "users1_name_1": ${ printed_signature }
-      - "users1_signature": |
-          if user_has_attorney:
-            ${ attorneys[0].signature }
-          else:
-            ${ users[0].signature }
+      - "users1_signature": ${ users[0].signature }
         
   - name: VT small claims certificate of service attachment
     filename: small_claims_certificate_of_service_100_00260.pdf    
@@ -535,7 +590,7 @@ attachments:
     skip undefined: True
     pdf template file: small_claims_certificate_of_service_100_00260.pdf
     fields:
-      - "trial_court_county": ""
+      - "trial_court_county": ${ user_selected_county }
       - "users1_name": ${ users[0] }
       - "users1_name_full": ${ users[0] }
       - "users1_name_1": ${ users[0] }
@@ -544,24 +599,27 @@ attachments:
       - "users1_daytime_phone_number": ${ phone_number_formatted(users[0].daytime_phone_number) }
       - "users1_email": ${ users[0].email }
       - "other_parties1_name": ${ other_parties.short_list(2) }
-      - "motion_for_default_judgement_date": ${ motion_for_default_judgement_date }
-      - "default_judgement_date": ${ default_judgement_date }
-      - "financial_disclosure_order_date": ${ financial_disclosure_order_date }
-      - "notice_of_appeal_date": ${ notice_of_appeal_date }
-      - "other_description": ${ other_description }
+      - "mailed_summons": Yes
+      - "mailed_complaint": Yes
+      - "mailed_info_and_instructions_for_defendant": Yes
+      - "mailed_blank_answer_form": Yes
+      - "mailed_documents_attached_to_complaint": ''
 ---
 attachment:
   variable name: VT_small_claims_information_and_instructions_for_defendant_attachment[i]
-  pdf template file: 100-00259._Small_Claims_Information_and_Instructions_for_Defendant.pdf
-  tagged pdf: True
----
-attachment:
-  variable name: VT_small_claims_disclosure_of_exempt_income_attachment[i]
-  pdf template file: 100-00128._Disclosure_of_Exempt_Income.pdf
-  tagged pdf: True
+  pdf template file: Small_Claims_Information_and_Instructions_for_Defendant_100_00259.pdf
+  fields:
+    - "fake_field": ''
 ---
 attachment:
   variable name: VT_small_claims_answer_attachment[i]
-  pdf template file: 100-00126._Small_Claims_Answer.pdf
-  tagged pdf: True
+  pdf template file: Small_Claims_Answer_100_00126.pdf
+  fields:
+    - "fake_field": ''
+---
+attachment:
+  variable name: VT_small_claims_disclosure_of_exempt_income_attachment[i]
+  pdf template file: Disclosure_of_Exempt_Income_100_00128.pdf
+  fields:
+    - "fake_field": ''
 ---
