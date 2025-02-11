@@ -127,10 +127,11 @@ code: |
     attorney_screening_kickout
     attorneys.gather()
     attorneys[0].address.address
+    attorneys[0].daytime_phone_number
+    attorneys[0].email
   nav.set_section('other_party')
   other_parties.there_are_any = True
   other_parties.gather()
-  other_parties[0].birthdate
   other_parties[0].address.address
   set_progress(48)
   nav.set_section('case_info')
@@ -142,6 +143,7 @@ code: |
   claim_amount_total
   set_progress(64)
   complaint_description
+  documents_attached_to_complaint
   nav.set_section("review_small_claims_complaint")
   
   interview_order_small_claims_complaint = True
@@ -314,9 +316,9 @@ id: Phone and email
 question: |
   What is the best phone number and email to reach you at?
 fields:
-  - "Your daytime phone number": users[0].daytime_phone_number
+  - "Your daytime phone number:": users[0].daytime_phone_number
     maxlength: 27
-  - "Your email address": users[0].email
+  - "Your email address:": users[0].email
     maxlength: 38
 ---
 id: users lawyer
@@ -338,6 +340,15 @@ subquestion: |
 
   If your attorney is with you hit **Next** to complete your small claims complaint.
 continue button field: attorney_screening_kickout
+---
+id: attorney phone and email
+question: |
+  What is ${ attorneys[0].name }'s phone number and email?
+fields:
+  - "${ attorneys[0].name }'s daytime phone number:": attorneys[0].daytime_phone_number
+    maxlength: 27
+  - "${ attorneys[0].name }'s email address:": attorneys[0].email
+    maxlength: 38
 ---
 ############################### DEFENDANT INFO ###############################
 ---
@@ -378,21 +389,32 @@ fields:
   - "How much are you suing for?": claim_principal
     datatype: currency
     min: 1
-    max: 10000.00
+    max: 10000
+---
+code: |
+  max_interest = 10000 - claim_principal
 ---
 id: claim interest
 question: |
-  How much interest do you want to claim on the amount you are suing for?
+  How much interest is owed on the amount you are suing for?
+subquestion: |
+  You can leave this blank.
+  
+  Typically people do not add a separate interest amount on the Small Claims Complaint form, unless a lawyer has told them to do so for some reason.
 fields:
   - "How much interest do you believe is owed on the amount you are suing for?": claim_interest
     datatype: currency
-    min: 0
+    max: ${ round(max_interest, 2) }
+    validation messages:
+      max: |
+        The combined total of your claim and interest cannot exceed $10,000.00. Based on the amount of your claim, the maximum interest you can ask for is $${ round(max_interest, 2) }.
+    required: False
 ---
 id: claim court costs
 question: |
   Court fee
 subquestion: |
-  Your court fee will be automatically entered on your documents based on the total you are suing for.
+  Your court fee will be automatically entered on your documents based on the combined total of the claim amount and interest you are suing for.
   
   * If your claim is $1,000 or less the fee will be $65.
   * If your claim is more than $1,000 the fee will be $90.
@@ -403,21 +425,41 @@ continue button field: claim_court_costs
 ---
 ### Code to get court fee amount ####
 code: |
-  if claim_principal > 1000:
+  if claim_principal + claim_interest > 1000:
     claim_court_fee = 90
   else:
     claim_court_fee = 65
 ---
-### Code to get total claim amount ###
+### Code to get total claim amount and set max amount to $10,000 ###
 code: |
   claim_amount_total = claim_principal + claim_interest + claim_court_fee
+  if claim_amount_total > 10000:
+    claim_amount_total = 10000
 ---
 id: complaint description
 question: |
-  Please describe what happened.
+  What happened?
 fields:
   - "In your own words, describe what happened.": complaint_description
     input type: area
+---
+id: documents attached to complaint
+question: |
+  Supporting documents
+subquestion: |
+  Supporting documents can include anything that supports your case.
+  
+  Examples include:
+  
+  - Written contracts
+  - Photos, or
+  - Emails
+
+  If you are submitting supporting documents with your Small Claims Complaint, you will need to send copies of them to the defendant and submit them to court with your complaint.
+  
+fields:
+  - "Are you including supporting documents in your Small Claims Complaint?": documents_attached_to_complaint
+    datatype: yesnoradio
 ---
 ##################### REVIEW SCREEN #######################
 ---
@@ -574,7 +616,7 @@ attachments:
       - "other_parties1_name1": ${ other_parties.short_list(2) }
       - "other_parties1_address_line_one": ${ other_parties[0].address.line_one() }
       - "other_parties1_address_line_two": ${ other_parties[0].address.line_two() }
-      - "other_parties1_birthdate": ${ format_date(other_parties[0].birthdate, format='M/d/yyyy') }
+      - "other_parties1_birthdate": ''
       - "claim_amount_principal": ${ thousands(claim_principal,show_decimals=True) }
       - "claim_amount_interest": ${ thousands(claim_interest,show_decimals=True) }
       - "claim_amount_court_costs": ${ thousands(claim_court_fee,show_decimals=True) }
@@ -592,18 +634,18 @@ attachments:
     fields:
       - "trial_court_county": ${ user_selected_county }
       - "users1_name": ${ users[0] }
-      - "users1_name_full": ${ users[0] }
-      - "users1_name_1": ${ users[0] }
-      - "users1_address_mailing_line_one": ${ users[0].address.line_one() }
-      - "users1_address_mailing_line_two": ${ users[0].address.line_two() }
-      - "users1_daytime_phone_number": ${ phone_number_formatted(users[0].daytime_phone_number) }
-      - "users1_email": ${ users[0].email }
+      - "users1_name_full": ${ attorneys[0] if user_has_attorney else users[0] }
+      - "users1_name_1": ${ attorneys[0] if user_has_attorney else users[0] }
+      - "users1_address_mailing_line_one": ${ attorneys[0].address.line_one() if user_has_attorney else users[0].address.line_one() }
+      - "users1_address_mailing_line_two": ${ attorneys[0].address.line_two() if user_has_attorney else users[0].address.line_two() }
+      - "users1_daytime_phone_number": ${ phone_number_formatted(attorneys[0].daytime_phone_number) if user_has_attorney else phone_number_formatted(users[0].daytime_phone_number) }
+      - "users1_email": ${ attorneys[0].email if user_has_attorney else users[0].email }
       - "other_parties1_name": ${ other_parties.short_list(2) }
       - "mailed_summons": Yes
       - "mailed_complaint": Yes
       - "mailed_info_and_instructions_for_defendant": Yes
       - "mailed_blank_answer_form": Yes
-      - "mailed_documents_attached_to_complaint": ''
+      - "mailed_documents_attached_to_complaint": ${ documents_attached_to_complaint }
 ---
 attachment:
   variable name: VT_small_claims_information_and_instructions_for_defendant_attachment[i]
