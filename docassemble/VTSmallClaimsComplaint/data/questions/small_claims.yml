@@ -297,6 +297,8 @@ subquestion: |
   In your complaint, you can ask the defendant to pay you back for the court filing fee.
     
   If you have a low income, you could ask the court for a fee waiver. We will point you to the VTCourtForms Fee Waiver tool after you finish this small claims complaint.
+
+  When you file your small claims complaint, you need to either pay the filing fee or hand in a fee waiver form.
 fields:
   - I understand: fee_screening
     datatype: yesnoradio
@@ -310,6 +312,8 @@ subquestion: |
   In your complaint, you can ask the defendant to pay you back for the court filing fee.
     
   If you have a low income, you could ask the court for a fee waiver. We will point you to the VTCourtForms Fee Waiver tool after you finish this small claims complaint.
+
+  When you file your small claims complaint, you need to either pay the filing fee or hand in a fee waiver form.
   
   Do you want to continue?
 continue button field: fee_screening_kickout
@@ -437,6 +441,14 @@ fields:
 id: claim principal
 question: |
   How much are you suing for?
+subquestion: |
+  What are your "damages"? How much does the defendant owe you, or how much money did they cause you to lose?
+
+  Special types of damages you should know about:
+
+  - Are you suing a former landlord over a security deposit? You can ask for double the total amount of the deposit if your landlord kept the deposit without a written reason, or if they waited more than 14 days to get your deposit back to you. See the [Security Deposit Roadmap on VTLawHelp.org](https://vtlawhelp.org/roadmap/security-deposit/step-1) for more information.
+  
+  - Are you a customer suing a business over a product or service that they sold you? You may be entitled to triple the amount you spent on the product or service, if the business lied to you about the product or service.
 fields:
   - "How much are you suing for?": claim_principal
     datatype: currency
@@ -452,9 +464,9 @@ question: |
 subquestion: |
   You can leave this blank.
   
-  Typically people do not add a separate interest amount on the Small Claims Complaint form, unless a lawyer has told them to do so for some reason.
+  Usually, people do not add a separate interest amount on the small claims complaint form, unless a lawyer has told them to do so for some reason.
 fields:
-  - "How much interest do you believe is owed on the amount you are suing for?": claim_interest
+  - "How much interest do you believe is owed?": claim_interest
     datatype: currency
     max: ${ round(max_interest, 2) }
     validation messages:
@@ -466,12 +478,18 @@ id: claim court costs
 question: |
   Court fee
 subquestion: |
-  Your court fee will be automatically entered on your documents based on the combined total of the claim amount and interest you are suing for.
+  Most people include the court filing fee in the amount they want to get from the defendant.
+  
+  In your case, your court filing fee is ${ currency(claim_court_fee)  }.
+  
+  Do you want to add it to the amount you want to get from the defendant?
+  
+  A reminder:
   
   * If your claim is $1,000 or less the fee will be $65.
   * If your claim is more than $1,000 the fee will be $90.
 
-  If you want to apply for a fee waiver, you will be able to navigate to the VTCourtForms Fee Waiver tool on the download screen where you receive your small claims forms.
+  If you want to apply for a fee waiver, we will point you to the VTCourtForms Fee Waiver tool later. When you file your small claims complaint, you need to either pay the filing fee or hand in a fee waiver form.
   
 continue button field: claim_court_costs
 ---
