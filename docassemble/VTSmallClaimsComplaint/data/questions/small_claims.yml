@@ -299,7 +299,7 @@ subquestion: |
 
   When you give your small claims complaint to the court, you need to either pay the filing fee or hand in a fee waiver form. If you have a low income, you could ask the court for a fee waiver. We will point you to the VTCourtForms Fee Waiver tool after you finish this small claims complaint.
 
-    In your complaint, you can ask the defendant to pay you back for the court filing fee.
+    As part of your claim against the defendant, you can ask to be reimbursed for the court filing fee.
 fields:
   - I understand: fee_screening
     datatype: yesno
