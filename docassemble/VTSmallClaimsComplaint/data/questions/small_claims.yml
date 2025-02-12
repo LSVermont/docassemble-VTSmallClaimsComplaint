@@ -132,6 +132,7 @@ code: |
   claim_interest
   claim_court_costs
   claim_amount_total
+  recap_total_claim
   set_progress(64)
   complaint_description
   documents_attached_to_complaint
@@ -292,28 +293,24 @@ id: fee screening
 question: |
   Are you aware of the court filing fee?
 subquestion: |
-  The small claims court filing fee is $65 for claims of $1,000 or less. It is $90 for claims more than $1,000. You can pay the court with cash, check or money order.
+  The small claims court filing fee is $65 for claims of $1,000 or less. It is $90 for claims over $1,000. You can pay the court with cash, check or money order.
 
-  In your complaint, you can ask the defendant to pay you back for the court filing fee.
-    
-  If you have a low income, you could ask the court for a fee waiver. We will point you to the VTCourtForms Fee Waiver tool after you finish this small claims complaint.
+  When you give your small claims complaint to the court, you need to either pay the filing fee or hand in a fee waiver form. If you have a low income, you could ask the court for a fee waiver. We will point you to the VTCourtForms Fee Waiver tool after you finish this small claims complaint.
 
-  When you file your small claims complaint, you need to either pay the filing fee or hand in a fee waiver form.
+    In your complaint, you can ask the defendant to pay you back for the court filing fee.
 fields:
   - I understand: fee_screening
-    datatype: yesnoradio
+    datatype: checkbox
 ---
 id: fee screening kickout
 question: |
   Filing fee for small claims court
 subquestion: |
-  The small claims court filing fee is $65 for claims of $1,000 or less. It is $90 for claims more than $1,000. You can pay the court with cash, check or money order.
+  The small claims court filing fee is $65 for claims of $1,000 or less. It is $90 for claims over $1,000. You can pay the court with cash, check or money order.
 
-  In your complaint, you can ask the defendant to pay you back for the court filing fee.
-    
-  If you have a low income, you could ask the court for a fee waiver. We will point you to the VTCourtForms Fee Waiver tool after you finish this small claims complaint.
+  When you give your small claims complaint to the court, you need to either pay the filing fee or hand in a fee waiver form. If you have a low income, you could ask the court for a fee waiver. We will point you to the VTCourtForms Fee Waiver tool after you finish this small claims complaint.
 
-  When you file your small claims complaint, you need to either pay the filing fee or hand in a fee waiver form.
+    In your complaint, you can ask the defendant to pay you back for the court filing fee.
   
   Do you want to continue?
 continue button field: fee_screening_kickout
@@ -442,6 +439,14 @@ id: claim principal
 question: |
   How much are you suing for?
 subquestion: |
+  The total amount of your "claim" in small claims courts cannot be more than $10,000. There are three things that make up your total:
+
+  - The "principal" (your damages)
+  - Any interest you want to claim on that amount (people often say $0)
+  - Your court filing fee, if you want to get that amount back from the other party ($65 for claims of $1,000 or less / $90 for more than $1,000)
+
+  **Let's start with your damages / the principal.**
+  
   What are your "damages"? How much does the defendant owe you, or how much money did they cause you to lose?
 
   Special types of damages you should know about:
@@ -450,7 +455,7 @@ subquestion: |
   
   - Are you a customer suing a business over a product or service that they sold you? You may be entitled to triple the amount you spent on the product or service, if the business lied to you about the product or service.
 fields:
-  - "How much are you suing for?": claim_principal
+  - "Damages / principal you want to claim": claim_principal
     datatype: currency
     min: 1
     max: 10000
@@ -460,13 +465,13 @@ code: |
 ---
 id: claim interest
 question: |
-  How much interest is owed on the amount you are suing for?
+  How much interest do you want to claim?
 subquestion: |
-  You can leave this blank.
+  You can leave this blank or say $0.
   
   Usually, people do not add a separate interest amount on the small claims complaint form, unless a lawyer has told them to do so for some reason.
 fields:
-  - "How much interest do you believe is owed?": claim_interest
+  - "Interest you want to claim": claim_interest
     datatype: currency
     max: ${ round(max_interest, 2) }
     validation messages:
@@ -489,9 +494,27 @@ subquestion: |
   * If your claim is $1,000 or less the fee will be $65.
   * If your claim is more than $1,000 the fee will be $90.
 
-  If you want to apply for a fee waiver, we will point you to the VTCourtForms Fee Waiver tool later. When you file your small claims complaint, you need to either pay the filing fee or hand in a fee waiver form.
+  When you give your small claims complaint to the court, you need to either pay the filing fee or hand in a fee waiver form. If you have a low income and want to apply for a fee waiver, we will point you to the VTCourtForms Fee Waiver tool when you are done here. 
   
 continue button field: claim_court_costs
+---
+id: recap total claim
+question: |
+  Your total claim
+subquestion: |
+  Let's review your total claim.
+  
+  Principal/damages: ${ currency(claim_principal) }
+  
+  Interest: ${ currency(claim_interest) }
+  
+  Court filing fee: ${ currency(claim_court_fee) }
+  
+  **TOTAL OF ${ currency(claim_amount_total) }**
+
+  Tap Next to continue. If you want to change these amounts, tap Undo to go bac.
+
+continue button field: recap_total_claim
 ---
 ### Code to get court fee amount ####
 code: |
@@ -628,9 +651,7 @@ subquestion: |
   ${ collapse_template(not_seeing_email) }
   ${ collapse_template(log_out_when_done) }
 
-  If you receive public benefits or your income is less than 150% of the Federal Poverty Level, the court may be able to waive your filing fees.
-  
-  If you would like to ask the court to waive your filing fees and service costs you can use VTCourtForms [Fee Waiver tool](https://apps.vtcourtforms.org/run/VTFeeWaiver/#/1). 
+  If you receive public assistance or your income is less than 150% of the Federal Poverty Level, the court may be able to waive your filing fees. If you would like to ask the court to waive your filing fees and service costs you can use VTCourtForms [Fee Waiver tool](https://apps.vtcourtforms.org/run/VTFeeWaiver/#/1). 
   
   **Before starting your fee waiver application:**
   
