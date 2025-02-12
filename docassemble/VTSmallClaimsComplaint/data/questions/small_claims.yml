@@ -10,7 +10,7 @@ metadata:
   short title: >-
     Small claims
   description: |-
-    This tool helps someone in Vermont start a small claims case.
+    Small claims complaint for Vermont courts. Based on Vermont Judiciary paper form 100-00257 (07/2023).
   can_I_use_this_form: |
     If you live in Vermont and are seeking $10,000 or less, you can use this tool to start a small claims case.
   before_you_start: |
@@ -31,7 +31,7 @@ metadata:
   help_page_url: >-
     https://vtlawhelp.org/roadmap/small-claims/step-1
   help_page_title: >-
-    Vermont Law Help page about small claims
+    VTLawHelp.org Small Claims Roadmap
   allowed_courts: []
   typical_role: "anonymous"
   al_weaver_version: "1.11.0"
@@ -76,7 +76,7 @@ sections:
   - about_you: About you
   - other_party: The other party
   - case_info: Your claim
-  - review_small_claims_answer: Edit your answers
+  - review_small_claims_complaint: Edit your answers
   - sign: Sign your documents
   - get_docs: Download your documents
 ---
@@ -136,7 +136,6 @@ code: |
   set_progress(64)
   complaint_description
   documents_attached_to_complaint
-  nav.set_section("review_small_claims_complaint")
   
   interview_order_small_claims_complaint = True
 ---
@@ -150,6 +149,8 @@ code: |
   interview_order_small_claims_complaint
   nav.set_section("review_small_claims_complaint")
   claim_amount_total
+  #trial_court.address.county
+  small_claims_complaint_preview_question
   
   nav.set_section("sign")
   set_progress(95)
@@ -298,7 +299,7 @@ subquestion: |
 
   When you give your small claims complaint to the court, you need to either pay the filing fee or hand in a fee waiver form. If you have a low income, you could ask the court for a fee waiver. We will point you to the VTCourtForms Fee Waiver tool after you finish this small claims complaint.
 
-    In your complaint, you can ask the defendant to pay you back for the court filing fee.
+    As part of your claim against the defendant, you can ask to be reimbursed for the court filing fee.
 fields:
   - I understand: fee_screening
     datatype: yesno
@@ -500,7 +501,6 @@ fields:
   
 continue button field: claim_court_costs
 ---
----
 ### Code to get court fee amount ####
 code: |
   if claim_principal + claim_interest > 1000:
@@ -514,7 +514,6 @@ code: |
   claim_amount_total = claim_principal + claim_interest + claim_court_fee
   if claim_amount_total > 10000:
     amount_over_10k = claim_amount_total - 10000
----
 ---
 id: recap total claim
 question: |
@@ -547,7 +546,7 @@ id: complaint description
 question: |
   What happened?
 fields:
-  - "In your own words, describe what happened.": complaint_description
+  - "In your own words, describe why you are suing ${ other_parties }": complaint_description
     input type: area
 ---
 id: documents attached to complaint
@@ -601,19 +600,25 @@ review:
       ${ users[0].daytime_phone_number }
   - Edit: claim_principal
     button: |
-      **How much are you suing for?**:
+      **Damages / principal you want to claim**:
       ${ currency(claim_principal) }
   - Edit: claim_interest
     button: |
-      **How much interest do you believe is owed on the amount you are suing for?**:
+      **Interest you want to claim**:
       ${ currency(claim_interest) }
-  - Edit: claim_court_costs
+  - Edit: wants_to_claim_court_fee
     button: |
-      **How much will your court costs be for filing this small claims case?**:
-      ${ currency(claim_court_costs) }
+      **Your court filing fee**:
+      ${ currency(claim_court_fee) }
+
+      **You want to add that court fee to your claim**:
+      ${ word(yesno(wants_to_claim_court_fee)) }
+
+      **Your TOTAL claim**:
+      ${ currency(claim_amount_total) }
   - Edit: complaint_description
     button: |
-      **In your own words, describe what happened.**:
+      **Why you are suing**:
       > ${ single_paragraph(complaint_description) }
 ---
 id: Signing your forms
@@ -742,7 +747,7 @@ attachments:
       - "other_parties1_name1": ${ other_parties.short_list(2) }
       - "other_parties1_address_line_one": ${ other_parties[0].address.line_one() }
       - "other_parties1_address_line_two": ${ other_parties[0].address.line_two() }
-      - "other_parties1_birthdate": ''
+      - "other_parties1_birthdate": ${ format_date(other_parties[0].birthdate, format='M/d/yyyy') }
       - "claim_amount_principal": ${ thousands(claim_principal,show_decimals=True) }
       - "claim_amount_interest": ${ thousands(claim_interest,show_decimals=True) }
       - "claim_amount_court_costs": ${ thousands(claim_court_fee,show_decimals=True) }
