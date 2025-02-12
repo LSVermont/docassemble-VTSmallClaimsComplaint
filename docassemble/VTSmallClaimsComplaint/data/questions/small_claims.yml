@@ -10,22 +10,11 @@ metadata:
   short title: >-
     Small claims
   description: |-
-    This interview helps someone in Vermont start a small claims case.
+    This tool helps someone in Vermont start a small claims case.
   can_I_use_this_form: |
-    If you live in Vermont and are seeking $10,000 or less, you can use this interview to start a small claims case.
+    If you live in Vermont and are seeking $10,000 or less, you can use this tool to start a small claims case.
   before_you_start: |
-    This guided interview will produce an initial package of forms needed to start a small claims case in Vermont.
-    
-    Before you get started, please gather:
-    
-    1. 
-    1. 
-    1. 
-    
-    When you are finished, you will need to:
-    
-    1. 
-    1.
+    This guided tool will produce an initial package of forms needed to start a small claims case in Vermont.
   maturity: production
   estimated_completion_minutes: 15
   estimated_completion_delta: 5
@@ -34,7 +23,8 @@ metadata:
   tags:
     - "MO-10-00-00-00"
   authors:
-    - Kelly McGuire
+    - Kelly McGuire, Lemma Legal
+    - Kris Surette, Legal Services Vermont
   original_form:
     - NA
   original_form_published_on: ""
@@ -85,7 +75,7 @@ sections:
   - intro: Is this tool right for you?
   - about_you: About you
   - other_party: The other party
-  - case_info: Your court case
+  - case_info: Your claim
   - review_small_claims_answer: Edit your answers
   - sign: Sign your documents
   - get_docs: Download your documents
@@ -132,6 +122,7 @@ code: |
   nav.set_section('other_party')
   other_parties.there_are_any = True
   other_parties.gather()
+  other_parties[0].birthdate
   other_parties[0].address.address
   set_progress(48)
   nav.set_section('case_info')
@@ -141,6 +132,7 @@ code: |
   claim_interest
   claim_court_costs
   claim_amount_total
+  recap_total_claim
   set_progress(64)
   complaint_description
   documents_attached_to_complaint
@@ -157,6 +149,7 @@ code: |
   al_intro_screen
   interview_order_small_claims_complaint
   nav.set_section("review_small_claims_complaint")
+  claim_amount_total
   
   nav.set_section("sign")
   set_progress(95)
@@ -211,7 +204,7 @@ subquestion: |
   - make a list of each reason they owe you money or caused you to lose money. These are your “damages.”
   - come up with a total amount you want to sue for (You can include more than one dispute with the same defendant in your lawsuit, if the total amount you are asking for is $10,000 or less.)
   - be prepared to pay a court filing fee of $60 or $90, depending on the amount you are suing for
-  - or, be prepared to submit a fee waiver form to the court at the same time that you submit your Small Claims Complaint. (See our Small Claims Roadmap for details: [https://vtlawhelp.org/roadmap/small-claims/step-2](https://vtlawhelp.org/roadmap/small-claims/step-2))
+  - or, be prepared to submit a fee waiver form to the court at the same time that you submit your small claims complaint. (See our Small Claims Roadmap for details: [https://vtlawhelp.org/roadmap/small-claims/step-2](https://vtlawhelp.org/roadmap/small-claims/step-2))
 
   Ask for general help with court forms or the court process by contacting the [Vermont Judiciary Access and Resource Center](https://www.vermontjudiciary.org/self-help/ARC). Their services are free and they serve the whole state. They do NOT give legal advice.
 
@@ -245,15 +238,19 @@ fields:
 ---
 id: initial screening kickout
 question: |
-  You cannot sue someone for more than $10,000 in small claims court.
+  Stop
 subquestion: |
-  If you wanted to sue someone for more than $10,000, but will settle for $10,000, you can use small claims court to get the $10,000. Some people do this because small claims court is easier and cheaper than going to the Civil Division of Vermont Superior Court.
+  You **cannot** sue someone for more than $10,000 in small claims court.
+  
+  If you want to sue someone for more than $10,000, but will settle for $10,000, you can use small claims court to get the $10,000. Some people do this because small claims court is easier and cheaper than going to the Civil Division of Vermont Superior Court.
 
-  Do you want to continue starting a case for $10,000 or less?
+  If you want to sue for more than $10,000 you cannot use this tool.
+
+  Do you want to continue?
 continue button field: money_screening_kickout
 buttons:
   - DELETE your answers: restart
-  - CONTINUE to interview: continue
+  - CONTINUE: continue
 ---
 id: debt screening
 question: |
@@ -264,57 +261,101 @@ fields:
 ---
 id: debt screening kickout
 question: |
-  In Vermont, for a consumer credit transaction or medical debt, the maximum amount you can ask for in a small claims case is $5,000.
+  Stop
 subquestion: |
+  In Vermont, for a consumer credit transaction or medical debt, the most you can ask for in a small claims case is $5,000.
+
   You may use this tool if you are asking for $5,000 or less. Do you want to continue?
 continue button field: debt_screening_kickout
 buttons:
   - DELETE your answers: restart
-  - CONTINUE to interview: continue
+  - CONTINUE: continue
 ---
 id: non money screening
 question: |
   Do you want something other than money?
 subquestion: |
-  For example, getting the court to order someone to **do** something or **stop doing** something?
+  For example, do you want the court to order someone to **do** something or **stop doing** something?
 fields:
   - no label: non_money_screening
     datatype: yesnoradio
 ---
 id: non money screening kickout
 question: |
-  Small claims court cannot help if you are asking the court to order someone to do something or stop doing something. That kind of order is called an “injunction.” You cannot use small claims court for an injunction.
+  Stop
+subquestion: |
+  Small claims court **cannot** help if you are asking the court to order someone to do something or stop doing something. That kind of order is called an “injunction.” You cannot use small claims court for an injunction.
 continue button field: non_money_screening_kickout
 buttons:
   - DELETE your answers: restart
-  - CONTINUE to interview: continue
+  - CONTINUE anyway: continue
 ---
 id: fee screening
 question: |
-  Are you aware of the court filing fee? Or do you plan to fill out a form to ask for a fee waiver?
+  Are you aware of the court filing fee?
 subquestion: |
-  If you would like to ask for a fee waiver, we will help you navigate to the VTCourtForms Fee Waiver Interview once you have completed your small claims complaint.
+  The small claims court filing fee is $65 for claims of $1,000 or less. It is $90 for claims over $1,000. You can pay the court with cash, check or money order.
+
+  When you give your small claims complaint to the court, you need to either pay the filing fee or hand in a fee waiver form. If you have a low income, you could ask the court for a fee waiver. We will point you to the VTCourtForms Fee Waiver tool after you finish this small claims complaint.
+
+    In your complaint, you can ask the defendant to pay you back for the court filing fee.
 fields:
-  - no label: fee_screening
-    datatype: yesnoradio
+  - I understand: fee_screening
+    datatype: yesno
 ---
 id: fee screening kickout
 question: |
-  There is a filing fee for small claims court.
+  Filing fee for small claims court
 subquestion: |
-  In 2024 it was $65 for claims for $1,000 or less, or $90 for claims more than $1,000. You can pay the court with cash, check or money order.
+  The small claims court filing fee is $65 for claims of $1,000 or less. It is $90 for claims over $1,000. You can pay the court with cash, check or money order.
+
+  When you give your small claims complaint to the court, you need to either pay the filing fee or hand in a fee waiver form. If you have a low income, you could ask the court for a fee waiver. We will point you to the VTCourtForms Fee Waiver tool after you finish this small claims complaint.
+
+    In your complaint, you can ask the defendant to pay you back for the court filing fee.
   
   Do you want to continue?
 continue button field: fee_screening_kickout
 buttons:
   - DELETE your answers: restart
-  - CONTINUE to interview: continue
+  - CONTINUE: continue
 ---
 ############################### USER INFO ###############################
 ---
-id: Phone and email
+id: gather users street address
+sets:
+  - users[0].address.address
+  - users[0].address.city
+  - users[0].address.zip
+  - users[0].address.unit
+  - users[0].address.state
+  - users[0].address.country
 question: |
-  What is the best phone number and email to reach you at?
+  What is your address?  
+fields:
+  - code: |
+      users[0].address_fields(default_state=AL_DEFAULT_STATE)
+  - I have a mailing address that is different from my street address: users_mailing_address_different
+    datatype: yesno
+  - Mailing address: users[0].mailing_address.address
+    address autocomplete: True
+    show if: users_mailing_address_different
+  - Unit: users[0].mailing_address.unit
+    required: False
+    show if: users_mailing_address_different
+  - City: users[0].mailing_address.city
+    show if: users_mailing_address_different
+  - State: users[0].mailing_address.state
+    code: |
+      states_list()
+    default: VT
+    show if: users_mailing_address_different
+  - Zip or postal code: users[0].mailing_address.zip
+    required: False
+    show if: users_mailing_address_different
+---
+id: phone and email
+question: |
+  Your contact information
 fields:
   - "Your daytime phone number:": users[0].daytime_phone_number
     maxlength: 27
@@ -323,31 +364,32 @@ fields:
 ---
 id: users lawyer
 question: |
-  Do you have a lawyer?
+  Do you have a lawyer for this case?
 fields:
   - "Do you have an attorney working with you on this case?": user_has_attorney
     datatype: yesnoradio
   - note: |
-      Usually, the people who use this guided interview do **not** have a lawyer. If you are represented by a lawyer, the lawyer usually files court paperwork for you. Ask them about this.
+      Usually, the people who use this tool do **not** have a lawyer.
 ---
 id: attorney screening kickout
 question: |
-  Your attorney needs to fill out this form.
+  Warning
 subquestion: |
-  **Stop** now and come back with your attorney.
+  Usually, the people who use this tool do **not** have a lawyer. If you are represented by a lawyer, the lawyer usually files court paperwork for you. Ask them about this.
   
-  You can create a free account so you can save your answers and come back later with your attorney. Choose **sign up** in the Menu above, or **register** below.
+  You can create a free account so you can save your answers and come back later after you talk to your lawyer. Choose **sign up** in the menu at the top of the screen, or **register** below.
 
-  If your attorney is with you hit **Next** to complete your small claims complaint.
+  If you have a lawyer for this case, we will collect their information next.
+
 continue button field: attorney_screening_kickout
 ---
 id: attorney phone and email
 question: |
-  What is ${ attorneys[0].name }'s phone number and email?
+  ${ attorneys[0].name }'s contact information
 fields:
-  - "${ attorneys[0].name }'s daytime phone number:": attorneys[0].daytime_phone_number
+  - "Their daytime phone number:": attorneys[0].daytime_phone_number
     maxlength: 27
-  - "${ attorneys[0].name }'s email address:": attorneys[0].email
+  - "Their email address:": attorneys[0].email
     maxlength: 38
 ---
 ############################### DEFENDANT INFO ###############################
@@ -361,10 +403,21 @@ sets:
 question: |
   Name of ${ ordinal(i) } defendant
 subquestion: |
-  A defendant is the person who is being sued and is responding to a court action.
+  The defendant is who you are suing. You may have more than one defendant. We will collect their information one at a time.
 fields:
   - code: |
       other_parties[i].name_fields(person_or_business='unsure')
+---
+id: birthdate question
+generic object: ALIndividual
+question: |
+  When was ${x} born?
+subquestion: |
+  You can leave this blank if you do not know. You can leave this blank if it is a business.
+fields:
+  - Birthdate: x.birthdate
+    datatype: BirthDate
+    required: False
 ---
 ############################### CASE INFO ###############################
 ---
@@ -375,18 +428,35 @@ fields:
   - note: |
       Choose the county where you will file this form.
 
+      You can choose the county where you live, or the county where the defendant is.
+
   - County: user_selected_county
     code: sorted(all_courts.unique_column_values('branch') - {"Environmental", "Judicial Bureau", "Criminal", "Family"} )
   
   - note: |
-      ${ collapse_template(which_county_to_choose) }
       ${ collapse_template(in_which_county) }
 ---
 id: claim principal
 question: |
   How much are you suing for?
+subquestion: |
+  The total amount of your "claim" in small claims courts cannot be more than $10,000. There are three things that make up your total:
+
+  - The "principal" (your damages)
+  - Any interest you want to claim on that amount (people often say $0)
+  - Your court filing fee, if you want to get that amount back from the other party ($65 for claims of $1,000 or less / $90 for more than $1,000)
+
+  **Let's start with your damages / the principal.**
+  
+  What are your "damages"? How much does the defendant owe you, or how much money did they cause you to lose?
+
+  Special types of damages you should know about:
+
+  - Are you suing a former landlord over a security deposit? You can ask for double the total amount of the deposit if your landlord kept the deposit without a written reason, or if they waited more than 14 days to get your deposit back to you. See the [Security Deposit Roadmap on VTLawHelp.org](https://vtlawhelp.org/roadmap/security-deposit/step-1) for more information.
+  
+  - Are you a customer suing a business over a product or service that they sold you? You may be entitled to triple the amount you spent on the product or service, if the business lied to you about the product or service.
 fields:
-  - "How much are you suing for?": claim_principal
+  - "Damages / principal you want to claim": claim_principal
     datatype: currency
     min: 1
     max: 10000
@@ -396,13 +466,13 @@ code: |
 ---
 id: claim interest
 question: |
-  How much interest is owed on the amount you are suing for?
+  How much interest do you want to claim?
 subquestion: |
-  You can leave this blank.
+  You can leave this blank or say $0.
   
-  Typically people do not add a separate interest amount on the Small Claims Complaint form, unless a lawyer has told them to do so for some reason.
+  Usually, people do not add a separate interest amount on the small claims complaint form, unless a lawyer has told them to do so for some reason.
 fields:
-  - "How much interest do you believe is owed on the amount you are suing for?": claim_interest
+  - "Interest you want to claim": claim_interest
     datatype: currency
     max: ${ round(max_interest, 2) }
     validation messages:
@@ -414,14 +484,22 @@ id: claim court costs
 question: |
   Court fee
 subquestion: |
-  Your court fee will be automatically entered on your documents based on the combined total of the claim amount and interest you are suing for.
+  Most people include the court filing fee in the amount they want to get from the defendant.
   
-  * If your claim is $1,000 or less the fee will be $65.
-  * If your claim is more than $1,000 the fee will be $90.
+  In your case, your court filing fee is **${ currency(claim_court_fee)  }**.
+fields:  
+  - Do you want to add it to the amount you want to get from the defendant?: wants_to_claim_court_fee
+    datatype: yesnoradio
+  - note: |
+      A reminder:
+  
+      * If your claim is $1,000 or less the fee will be $65.
+      * If your claim is more than $1,000 the fee will be $90.
 
-  If you want to apply for a fee waiver, you will be able to navigate to the VTCourtForms Fee Waiver Interview on the download screen where you receive your small claims forms.
+      When you give your small claims complaint to the court, you need to either pay the filing fee or hand in a fee waiver form. If you have a low income and want to apply for a fee waiver, we will point you to the VTCourtForms Fee Waiver tool when you are done here. 
   
 continue button field: claim_court_costs
+---
 ---
 ### Code to get court fee amount ####
 code: |
@@ -432,9 +510,38 @@ code: |
 ---
 ### Code to get total claim amount and set max amount to $10,000 ###
 code: |
+  claim_amount_total = 0
   claim_amount_total = claim_principal + claim_interest + claim_court_fee
   if claim_amount_total > 10000:
-    claim_amount_total = 10000
+    amount_over_10k = claim_amount_total - 10000
+---
+---
+id: recap total claim
+question: |
+  Your total claim
+subquestion: |
+  Let's review your total claim.
+  
+  - Principal/damages: ${ currency(claim_principal) }
+  
+  - Interest: ${ currency(claim_interest) }
+
+  % if wants_to_claim_court_fee:
+  - Court filing fee: ${ currency(claim_court_fee) }
+  % else:
+  - Court filing fee: $0
+  % endif
+
+  % if claim_amount_total > 10000:
+    **You have gone over the $10,000 limit for small claims court by ${ currency(amount_over_10k) }**. If you want to use small claims court, go back and edit one of your amounts.
+  % else:
+  **TOTAL OF ${ currency(claim_amount_total) }**
+
+  This is the amount you will ask the court for.
+
+  Tap Next to continue. If you want to change these amounts, tap Undo to go back.
+  % endif
+continue button field: recap_total_claim
 ---
 id: complaint description
 question: |
@@ -451,14 +558,14 @@ subquestion: |
   
   Examples include:
   
-  - Written contracts
-  - Photos, or
-  - Emails
+  - contracts
+  - photos
+  - emails or texts
 
-  If you are submitting supporting documents with your Small Claims Complaint, you will need to send copies of them to the defendant and submit them to court with your complaint.
+  If you include copies of supporting documents with your small claims complaint, later you will need to send copies to the defendant, too.
   
 fields:
-  - "Are you including supporting documents in your Small Claims Complaint?": documents_attached_to_complaint
+  - "Are you including supporting documents in your small claims complaint?": documents_attached_to_complaint
     datatype: yesnoradio
 ---
 ##################### REVIEW SCREEN #######################
@@ -534,6 +641,27 @@ code: |
   else:
     default_printed_signature = users[0].name
 ---
+##################### PREVIEW SCREEN #######################
+---
+id: preview small claims complaint
+question: |
+  Preview your form before you sign it
+subquestion: |
+  
+  Here is a preview of the form you will sign on the next screen. 
+  
+  ${ al_court_bundle.as_pdf(key='preview') }
+
+  Click the image to view it in a new tab. **Remember to come back to this screen to edit the form and/or finish the form.**
+  
+  Click the "Edit your answers" button to make changes.
+
+  ${ action_button_html(url_action('review_small_claims'), label='<i class="fa-solid fa-pencil"></i> Edit your answers', color='info') }
+
+  **Tap Next to choose how to sign your form.**
+  
+continue button field: small_claims_complaint_preview_question    
+---
 ##################### DOWNLOAD SCREEN #####################
 ---
 id: download screen
@@ -558,9 +686,7 @@ subquestion: |
   ${ collapse_template(not_seeing_email) }
   ${ collapse_template(log_out_when_done) }
 
-  If you receive public benefits or your income is less than 150% of the Federal Poverty Level, the court may be able to waive your filing fees.
-  
-  If you would like to ask the court to waive your filing fees and service costs you can use VTCourtForms [Fee Waiver Interview](https://apps.vtcourtforms.org/run/VTFeeWaiver/#/1). 
+  If you receive public assistance or your income is less than 150% of the Federal Poverty Level, the court may be able to waive your filing fees. If you would like to ask the court to waive your filing fees and service costs you can use VTCourtForms [Fee Waiver tool](https://apps.vtcourtforms.org/run/VTFeeWaiver/#/1). 
   
   **Before starting your fee waiver application:**
   
