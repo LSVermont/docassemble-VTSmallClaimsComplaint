@@ -10,7 +10,7 @@ metadata:
   short title: >-
     Small claims
   description: |-
-    This tool helps someone in Vermont start a small claims case.
+    Small claims complaint for Vermont courts. Based on Vermont Judiciary paper form 100-00257 (07/2023).
   can_I_use_this_form: |
     If you live in Vermont and are seeking $10,000 or less, you can use this tool to start a small claims case.
   before_you_start: |
@@ -31,7 +31,7 @@ metadata:
   help_page_url: >-
     https://vtlawhelp.org/roadmap/small-claims/step-1
   help_page_title: >-
-    Vermont Law Help page about small claims
+    VTLawHelp.org Small Claims Roadmap
   allowed_courts: []
   typical_role: "anonymous"
   al_weaver_version: "1.11.0"
@@ -548,7 +548,7 @@ id: complaint description
 question: |
   What happened?
 fields:
-  - "In your own words, describe what happened.": complaint_description
+  - "In your own words, describe why you are suing ${ other_parties }": complaint_description
     input type: area
 ---
 id: documents attached to complaint
@@ -743,7 +743,7 @@ attachments:
       - "other_parties1_name1": ${ other_parties.short_list(2) }
       - "other_parties1_address_line_one": ${ other_parties[0].address.line_one() }
       - "other_parties1_address_line_two": ${ other_parties[0].address.line_two() }
-      - "other_parties1_birthdate": ''
+      - "other_parties1_birthdate": ${ format_date(other_parties[0].birthdate, format='M/d/yyyy') }
       - "claim_amount_principal": ${ thousands(claim_principal,show_decimals=True) }
       - "claim_amount_interest": ${ thousands(claim_interest,show_decimals=True) }
       - "claim_amount_court_costs": ${ thousands(claim_court_fee,show_decimals=True) }
