@@ -501,7 +501,6 @@ fields:
   
 continue button field: claim_court_costs
 ---
----
 ### Code to get court fee amount ####
 code: |
   if claim_principal + claim_interest > 1000:
@@ -515,7 +514,6 @@ code: |
   claim_amount_total = claim_principal + claim_interest + claim_court_fee
   if claim_amount_total > 10000:
     amount_over_10k = claim_amount_total - 10000
----
 ---
 id: recap total claim
 question: |
@@ -602,19 +600,25 @@ review:
       ${ users[0].daytime_phone_number }
   - Edit: claim_principal
     button: |
-      **How much are you suing for?**:
+      **Damages / principal you want to claim**:
       ${ currency(claim_principal) }
   - Edit: claim_interest
     button: |
-      **How much interest do you believe is owed on the amount you are suing for?**:
+      **Interest you want to claim**:
       ${ currency(claim_interest) }
-  - Edit: claim_court_costs
+  - Edit: wants_to_claim_court_fee
     button: |
-      **How much will your court costs be for filing this small claims case?**:
-      ${ currency(claim_court_costs) }
+      **Your court filing fee**:
+      ${ currency(claim_court_fee) }
+
+      **You want to add that court fee to your claim**:
+      ${ word(yesno(wants_to_claim_court_fee)) }
+
+      **Your TOTAL claim**:
+      ${ currency(claim_amount_total) }
   - Edit: complaint_description
     button: |
-      **In your own words, describe what happened.**:
+      **Why you are suing**:
       > ${ single_paragraph(complaint_description) }
 ---
 id: Signing your forms
