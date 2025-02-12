@@ -76,7 +76,7 @@ sections:
   - about_you: About you
   - other_party: The other party
   - case_info: Your claim
-  - review_small_claims_answer: Edit your answers
+  - review_small_claims_complaint: Edit your answers
   - sign: Sign your documents
   - get_docs: Download your documents
 ---
@@ -136,7 +136,6 @@ code: |
   set_progress(64)
   complaint_description
   documents_attached_to_complaint
-  nav.set_section("review_small_claims_complaint")
   
   interview_order_small_claims_complaint = True
 ---
@@ -150,6 +149,8 @@ code: |
   interview_order_small_claims_complaint
   nav.set_section("review_small_claims_complaint")
   claim_amount_total
+  #trial_court.address.county
+  small_claims_complaint_preview_question
   
   nav.set_section("sign")
   set_progress(95)
