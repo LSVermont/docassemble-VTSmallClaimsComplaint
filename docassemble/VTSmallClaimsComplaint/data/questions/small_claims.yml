@@ -610,11 +610,10 @@ review:
   - Edit: attorneys[0].address.address
     button: |
       **Lawyer contact information**:
-      ${ attorneys[0].address.address }
       
-      ${ attorneys[0].daytime_phone_number }
+      ${ attorneys[0].address }
       
-      ${ attorneys[0].email }
+      ${ attorneys[0].daytime_phone_number }, ${ attorneys[0].email }
   - Edit: other_parties[0]
     button: |
       **The defendant**:
