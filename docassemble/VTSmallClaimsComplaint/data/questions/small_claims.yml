@@ -419,7 +419,7 @@ generic object: ALIndividual
 question: |
   When was ${x} born?
 subquestion: |
-  You can leave this blank if you do not know. You can leave this blank if it is a business.
+  You can leave this blank if you do not know.
 fields:
   - Birthdate: x.birthdate
     datatype: BirthDate
@@ -542,7 +542,11 @@ subquestion: |
   % endif
 
   % if claim_amount_total > 10000:
-    **You have gone over the $10,000 limit for small claims court by ${ currency(amount_over_10k) }**. If you want to use small claims court, go back and edit one of your amounts.
+    <i class="fas fa-hand-paper fa-3x" aria-hidden="true"></i>  **STOP!**
+  
+  **You have gone over the $10,000 limit for small claims court by ${ currency(amount_over_10k) }**. 
+  
+    If you want to use small claims court, **go back and edit** one of your amounts.
   % else:
   **TOTAL OF ${ currency(claim_amount_total) }**
 
@@ -558,6 +562,7 @@ question: |
 fields:
   - "In your own words, describe why you are suing ${ other_parties }": complaint_description
     input type: area
+    maxlength: 400
 ---
 id: documents attached to complaint
 question: |
