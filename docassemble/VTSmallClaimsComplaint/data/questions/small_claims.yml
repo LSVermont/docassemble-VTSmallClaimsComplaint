@@ -135,7 +135,7 @@ code: |
   user_selected_county
   claim_principal
   claim_interest
-  claim_court_costs
+  wants_to_claim_court_fee
   claim_amount_total
   recap_total_claim
   set_progress(64)
@@ -503,10 +503,11 @@ fields:
       * If your claim is more than $1,000 the fee will be $90.
 
       When you give your small claims complaint to the court, you need to either pay the filing fee or hand in a fee waiver form. If you have a low income and want to apply for a fee waiver, we will point you to the VTCourtForms Fee Waiver tool when you are done here. 
-  
-continue button field: claim_court_costs
 ---
 ### Code to get court fee amount ####
+depends on: 
+  - claim_principal
+  - claim_interest
 code: |
   if claim_principal + claim_interest > 1000:
     claim_court_fee = 90
@@ -514,6 +515,10 @@ code: |
     claim_court_fee = 65
 ---
 ### Code to get total claim amount and set max amount to $10,000 ###
+depends on: 
+  - claim_principal
+  - claim_interest
+  - claim_court_fee
 code: |
   claim_amount_total = 0
   claim_amount_total = claim_principal + claim_interest + claim_court_fee
@@ -629,11 +634,19 @@ review:
       **Defendant address**:
       
       ${ other_parties[0].address }
-  - Edit: claim_principal
+  - Edit: 
+      - claim_principal
+      - recompute: 
+          - claim_court_fee
+          - claim_amount_total
     button: |
       **Damages / principal you want to claim**:
       ${ currency(claim_principal) }
-  - Edit: claim_interest
+  - Edit:
+      - claim_interest
+      - recompute: 
+          - claim_court_fee
+          - claim_amount_total
     button: |
       **Interest you want to claim**:
       ${ currency(claim_interest) }
@@ -644,7 +657,7 @@ review:
 
       **You want to add that court fee to your claim**:
       ${ word(yesno(wants_to_claim_court_fee)) }
-
+ 
       **Your TOTAL claim**:
       ${ currency(claim_amount_total) }
   - Edit: complaint_description
@@ -783,10 +796,12 @@ attachments:
       - "other_parties1_address_line_one": ${ other_parties[0].address.line_one() }
       - "other_parties1_address_line_two": ${ other_parties[0].address.line_two() }
       - "other_parties1_birthdate": |
-          % if other_parties[0].person_type == "ALIndividual":
-          ${ format_date(other_parties[0].birthdate, format='M/d/yyyy') }
+          % if other_parties[0].birthdate == null:
+            ${ "" }
+          % elif other_parties[0].person_type == "ALIndividual":
+            ${ format_date(other_parties[0].birthdate, format='M/d/yyyy') }
           % else:
-          
+            ${ "" }
           % endif
       - "claim_amount_principal": ${ thousands(claim_principal,show_decimals=True) }
       - "claim_amount_interest": ${ thousands(claim_interest,show_decimals=True) }
