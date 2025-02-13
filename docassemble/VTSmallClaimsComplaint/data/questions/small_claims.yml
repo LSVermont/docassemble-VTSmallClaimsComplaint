@@ -122,7 +122,8 @@ code: |
   nav.set_section('other_party')
   other_parties.there_are_any = True
   other_parties.gather()
-  other_parties[0].birthdate
+  if other_parties[0].person_type == "ALIndividual":
+    other_parties[0].birthdate
   other_parties[0].address.address
   set_progress(48)
   nav.set_section('case_info')
@@ -576,20 +577,15 @@ question: |
 review:
   - Edit: users[0]
     button: |
-      **What is your name?**:
+      **About you**:
       ${ users[0] }
-  - Edit: other_parties[i]
-    button: |
-      **What is the defendant's name?**:
-      ${ other_parties[i] }
+
+      Birthdate:
+      ${ users[0].birthdate }
   - Edit: users[0].address
     button: |
       **What is your address?**:
       ${ users[0].address }
-  - Edit: other_parties[i].address
-    button: |
-      **What is the defendant's address?**:
-      ${ other_parties[i].address }
   - Edit: users[0].email
     button: |
       **What is your email?**:
@@ -598,6 +594,20 @@ review:
     button: |
       **What is your phone number?**:
       ${ users[0].daytime_phone_number }
+  - Edit: other_parties[0]
+    button: |
+      **The defendants**:
+      ${ other_parties[0] }
+  - Edit: other_parties[0].birthdate
+    button: |
+      **Defendant's birthdate**:
+      % if defined("other_parties[0].birthdate"):
+      ${ other_parties[0].birthdate }
+      % endif
+  - Edit: other_parties[0].address
+    button: |
+      **What is the defendant's address?**:
+      ${ other_parties[0].address }
   - Edit: claim_principal
     button: |
       **Damages / principal you want to claim**:
@@ -747,7 +757,10 @@ attachments:
       - "other_parties1_name1": ${ other_parties.short_list(2) }
       - "other_parties1_address_line_one": ${ other_parties[0].address.line_one() }
       - "other_parties1_address_line_two": ${ other_parties[0].address.line_two() }
-      - "other_parties1_birthdate": ${ format_date(other_parties[0].birthdate, format='M/d/yyyy') }
+      - "other_parties1_birthdate": |
+          % if defined("other_parties[0].birthdate"):
+          ${ format_date(other_parties[0].birthdate, format='M/d/yyyy') }
+          % endif
       - "claim_amount_principal": ${ thousands(claim_principal,show_decimals=True) }
       - "claim_amount_interest": ${ thousands(claim_interest,show_decimals=True) }
       - "claim_amount_court_costs": ${ thousands(claim_court_fee,show_decimals=True) }
