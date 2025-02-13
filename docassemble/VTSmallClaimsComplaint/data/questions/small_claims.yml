@@ -88,10 +88,12 @@ code: |
   
   user_role = "plaintiff"
   user_ask_role = "plaintiff"
+  
   nav.set_section('intro')
   VT_small_claims_intro
   important_notes_to_user
   set_progress(5)
+  
   money_screening
   if not money_screening:
     money_screening_kickout
@@ -105,6 +107,7 @@ code: |
   if not fee_screening:
     fee_screening_kickout
   set_progress(16)
+  
   nav.set_section('about_you')
   users.gather()
   users[0].birthdate
@@ -119,6 +122,7 @@ code: |
     attorneys[0].address.address
     attorneys[0].daytime_phone_number
     attorneys[0].email
+  
   nav.set_section('other_party')
   other_parties.there_are_any = True
   other_parties.gather()
@@ -126,8 +130,8 @@ code: |
     other_parties[0].birthdate
   other_parties[0].address.address
   set_progress(48)
+  
   nav.set_section('case_info')
-
   user_selected_county
   claim_principal
   claim_interest
@@ -201,12 +205,12 @@ question: |
 subquestion: | 
   To use this tool, you will need to:
 
-  - read about the full small claims process on our Small Claims Roadmap at: [https://vtlawhelp.org/roadmap/small-claims/step-1](https://vtlawhelp.org/roadmap/small-claims/step-1).
+  - read about the full small claims process on the [Small Claims Roadmap on VTLawHelp.org](https://vtlawhelp.org/roadmap/small-claims/step-1).
   - know the name and address of the person, business or organization that you want to sue for $10,000 or less
   - make a list of each reason they owe you money or caused you to lose money. These are your “damages.”
   - come up with a total amount you want to sue for (You can include more than one dispute with the same defendant in your lawsuit, if the total amount you are asking for is $10,000 or less.)
   - be prepared to pay a court filing fee of $60 or $90, depending on the amount you are suing for
-  - or, be prepared to submit a fee waiver form to the court at the same time that you submit your small claims complaint. (See our Small Claims Roadmap for details: [https://vtlawhelp.org/roadmap/small-claims/step-2](https://vtlawhelp.org/roadmap/small-claims/step-2))
+  - or, be prepared to submit a fee waiver form to the court at the same time that you submit your small claims complaint. See the [Small Claims Roadmap](https://vtlawhelp.org/roadmap/small-claims/step-2) for details.
 
   Ask for general help with court forms or the court process by contacting the [Vermont Judiciary Access and Resource Center](https://www.vermontjudiciary.org/self-help/ARC). Their services are free and they serve the whole state. They do NOT give legal advice.
 
@@ -479,7 +483,7 @@ fields:
     max: ${ round(max_interest, 2) }
     validation messages:
       max: |
-        The combined total of your claim and interest cannot exceed $10,000.00. Based on the amount of your claim, the maximum interest you can ask for is $${ round(max_interest, 2) }.
+        The combined total of your claim and interest cannot be more than $10,000.00. Based on the amount of your claim, the maximum interest you can ask for is ${ currency(max_interest) }.
     required: False
 ---
 id: claim court costs
@@ -580,33 +584,51 @@ review:
       **About you**:
       ${ users[0] }
 
-      Birthdate:
+      - Birthdate:
       ${ users[0].birthdate }
   - Edit: users[0].address
     button: |
-      **What is your address?**:
+      **Your address**:
+      
       ${ users[0].address }
   - Edit: users[0].email
     button: |
-      **What is your email?**:
+      **Your email**:
       ${ users[0].email }
   - Edit: users[0].daytime_phone_number
     button: |
-      **What is your phone number?**:
+      **Your phone number**:
       ${ users[0].daytime_phone_number }
+  - Edit: user_has_attorney
+    button: |
+      **You have a lawyer for this case**:
+      % if user_has_attorney:
+      Yes
+      % else:
+      No
+      % endif 
+  - Edit: attorneys[0].address.address
+    button: |
+      **Lawyer contact information**:
+      ${ attorneys[0].address.address }
+      
+      ${ attorneys[0].daytime_phone_number }
+      
+      ${ attorneys[0].email }
   - Edit: other_parties[0]
     button: |
-      **The defendants**:
+      **The defendant**:
       ${ other_parties[0] }
   - Edit: other_parties[0].birthdate
     button: |
-      **Defendant's birthdate**:
+      **Defendant birthdate**:
       % if other_parties[0].person_type == "ALIndividual":
         ${ other_parties[0].birthdate }
       % endif
   - Edit: other_parties[0].address
     button: |
-      **What is the defendant's address?**:
+      **Defendant address**:
+      
       ${ other_parties[0].address }
   - Edit: claim_principal
     button: |
@@ -629,7 +651,11 @@ review:
   - Edit: complaint_description
     button: |
       **Why you are suing**:
-      > ${ single_paragraph(complaint_description) }
+      ${ single_paragraph(complaint_description) }
+  - Edit: user_selected_county
+    button: |
+      **Court you will file in**:
+      Small claims court in ${ user_selected_county } County
 ---
 id: Signing your forms
 question: |
