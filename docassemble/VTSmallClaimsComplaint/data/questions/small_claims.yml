@@ -552,7 +552,7 @@ fields:
 ---
 id: documents attached to complaint
 question: |
-  Supporting documents
+  Documents to support your claim
 subquestion: |
   Supporting documents can include anything that supports your case.
   
@@ -601,8 +601,8 @@ review:
   - Edit: other_parties[0].birthdate
     button: |
       **Defendant's birthdate**:
-      % if defined("other_parties[0].birthdate"):
-      ${ other_parties[0].birthdate }
+      % if other_parties[0].person_type == "ALIndividual":
+        ${ other_parties[0].birthdate }
       % endif
   - Edit: other_parties[0].address
     button: |
@@ -758,8 +758,10 @@ attachments:
       - "other_parties1_address_line_one": ${ other_parties[0].address.line_one() }
       - "other_parties1_address_line_two": ${ other_parties[0].address.line_two() }
       - "other_parties1_birthdate": |
-          % if defined("other_parties[0].birthdate"):
+          % if other_parties[0].person_type == "ALIndividual":
           ${ format_date(other_parties[0].birthdate, format='M/d/yyyy') }
+          % else:
+          
           % endif
       - "claim_amount_principal": ${ thousands(claim_principal,show_decimals=True) }
       - "claim_amount_interest": ${ thousands(claim_interest,show_decimals=True) }
