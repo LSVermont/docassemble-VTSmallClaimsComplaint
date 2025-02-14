@@ -136,7 +136,6 @@ code: |
   claim_principal
   claim_interest
   wants_to_claim_court_fee
-  claim_amount_total
   recap_total_claim
   set_progress(64)
   complaint_description
@@ -153,7 +152,7 @@ code: |
   al_intro_screen
   interview_order_small_claims_complaint
   nav.set_section("review_small_claims_complaint")
-  claim_amount_total
+  (claim_principal + claim_interest + (claim_court_fee if wants_to_claim_court_fee else 0))
   #trial_court.address.county
   small_claims_complaint_preview_question
   
@@ -514,17 +513,6 @@ code: |
   else:
     claim_court_fee = 65
 ---
-### Code to get total claim amount and set max amount to $10,000 ###
-depends on: 
-  - claim_principal
-  - claim_interest
-  - claim_court_fee
-code: |
-  claim_amount_total = 0
-  claim_amount_total = claim_principal + claim_interest + claim_court_fee
-  if claim_amount_total > 10000:
-    amount_over_10k = claim_amount_total - 10000
----
 id: recap total claim
 question: |
   Your total claim
@@ -541,14 +529,14 @@ subquestion: |
   - Court filing fee: $0
   % endif
 
-  % if claim_amount_total > 10000:
+  % if (claim_principal + claim_interest + (claim_court_fee if wants_to_claim_court_fee else 0)) > 10000:
     <i class="fas fa-hand-paper fa-3x" aria-hidden="true"></i>  **STOP!**
   
-  **You have gone over the $10,000 limit for small claims court by ${ currency(amount_over_10k) }**. 
+  **You have gone over the $10,000 limit for small claims court by ${ currency(claim_principal + claim_interest + claim_court_fee - 10000) }**. 
   
     If you want to use small claims court, **go back and edit** one of your amounts.
   % else:
-  **TOTAL OF ${ currency(claim_amount_total) }**
+  **TOTAL OF ${ currency((claim_principal + claim_interest + (claim_court_fee if wants_to_claim_court_fee else 0))) }**
 
   This is the amount you will ask the court for.
 
@@ -643,7 +631,6 @@ review:
       - claim_principal
       - recompute: 
           - claim_court_fee
-          - claim_amount_total
     button: |
       **Damages / principal you want to claim**:
       ${ currency(claim_principal) }
@@ -651,20 +638,29 @@ review:
       - claim_interest
       - recompute: 
           - claim_court_fee
-          - claim_amount_total
     button: |
       **Interest you want to claim**:
       ${ currency(claim_interest) }
   - Edit: wants_to_claim_court_fee
     button: |
       **Your court filing fee**:
-      ${ currency(claim_court_fee) }
+      ${ currency(claim_court_fee if wants_to_claim_court_fee else 0) }
 
       **You want to add that court fee to your claim**:
       ${ word(yesno(wants_to_claim_court_fee)) }
- 
+
+      % if (claim_principal + claim_interest + (claim_court_fee if wants_to_claim_court_fee else 0)) > 10000:
+      <i class="fas fa-hand-paper fa-3x" aria-hidden="true"></i>  **STOP!**
+  
+      **You have gone over the $10,000 limit for small claims court by ${ currency(claim_principal + claim_interest + claim_court_fee - 10000) }**. 
+  
+      If you want to use small claims court, click **Edit** on the amounts.
+      % else:
       **Your TOTAL claim**:
-      ${ currency(claim_amount_total) }
+      ${ currency(claim_principal + claim_interest + (claim_court_fee if wants_to_claim_court_fee else 0)) }
+      % endif
+
+      
   - Edit: complaint_description
     button: |
       **Why you are suing**:
@@ -810,8 +806,8 @@ attachments:
           % endif
       - "claim_amount_principal": ${ thousands(claim_principal,show_decimals=True) }
       - "claim_amount_interest": ${ thousands(claim_interest,show_decimals=True) }
-      - "claim_amount_court_costs": ${ thousands(claim_court_fee,show_decimals=True) }
-      - "claim_amount_total": ${ thousands(claim_amount_total,show_decimals=True) }
+      - "claim_amount_court_costs": ${ thousands(claim_court_fee if wants_to_claim_court_fee else 0,show_decimals=True) }
+      - "claim_amount_total": ${ thousands((claim_principal + claim_interest + (claim_court_fee if wants_to_claim_court_fee else 0)),show_decimals=True) }
       - "complaint_description": ${ complaint_description }
       - "signature_date": ${ signature_date }
       - "users1_name_1": ${ printed_signature }
