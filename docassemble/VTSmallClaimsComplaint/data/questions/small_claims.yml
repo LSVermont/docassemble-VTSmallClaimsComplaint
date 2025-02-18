@@ -729,6 +729,7 @@ subquestion: |
   <hr>
   
   <h4 style="margin-bottom: 18px;">Documents to download</h4>
+  Download all. Some you will give to the court. You will hold on to the "blank" forms to share with the defendant later. See the Next Steps document for details.
   
   ${ al_user_bundle.download_list_html() }
 
@@ -740,12 +741,6 @@ subquestion: |
   
   ${ collapse_template(not_seeing_email) }
   ${ collapse_template(log_out_when_done) }
-
-  If you receive public assistance or your income is less than 150% of the Federal Poverty Level, the court may be able to waive your filing fees. If you would like to ask the court to waive your filing fees and service costs you can use VTCourtForms [Fee Waiver tool](https://apps.vtcourtforms.org/run/VTFeeWaiver/#/1). 
-  
-  **Before starting your fee waiver application:**
-  
-  - Make sure you have saved all the documents you need for your small claims complaint.
 
 progress: 100
 ---
