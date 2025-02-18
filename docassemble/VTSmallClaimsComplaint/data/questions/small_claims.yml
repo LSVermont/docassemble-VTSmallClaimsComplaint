@@ -690,6 +690,43 @@ fields:
        
        **Tap Next to choose how to sign your documents.**
 ---
+id: signature choice
+decoration: file-signature
+question: |
+  Your documents are almost ready
+subquestion: |
+  How do you want to sign them?
+fields: 
+  - I will sign: signature_choice
+    input type: radio
+    choices:
+      - On my computer or phone: this_device
+    show if:
+      code: |
+        al_form_requires_digital_signature
+  - I will sign: signature_choice
+    input type: radio
+    choices:
+      - On my computer or phone: this_device
+      - On the paper with a pen after I print the documents: sign_after_printing
+    show if:
+      code: |
+        not al_form_requires_digital_signature
+continue button field: saw_signature_choice    
+---
+id: persons signature
+generic object: ALIndividual
+question: |
+  % if user_has_attorney:
+  ${ attorneys[0].name }, please sign below
+  % else:
+  ${x}, please sign below
+  % endif
+signature: x.signature
+under: |
+  ${x}
+progress: 99
+---
 code: |
   if user_has_attorney:
     default_printed_signature = attorneys[0].name
@@ -724,7 +761,9 @@ event: VT_small_claims_complaint_download
 question: |
   ${download_screen_instructions_headline}
 subquestion: |
-  ${download_screen_instructions}
+  ${ download_screen_instructions }
+
+  ${ action_button_html(url_action('review_small_claims'), label='<i class="fa-solid fa-pencil"></i> Edit your answers', color='info') }
 
   <hr>
   
@@ -747,8 +786,8 @@ progress: 100
 ##################### ATTACHMENTS #####################
 ---
 objects:
-  - VT_small_claims_complaint_attachment: ALDocument.using(title="Vermont small claims complaint form", filename="small_claims_complaint_with_info_100_00257.pdf", enabled=True, has_addendum=False)
-  - VT_small_claims_certificate_of_service_attachment: ALDocument.using(title="Vermont small claims certificate of service form", filename="small_claims_certificate_of_service_100_00260.pdf", enabled=True, has_addendum=False)
+  - VT_small_claims_complaint_attachment: ALDocument.using(title="Vermont small claims complaint", filename="small_claims_complaint_with_info_100_00257.pdf", enabled=True, has_addendum=False)
+  - VT_small_claims_certificate_of_service_attachment: ALDocument.using(title="Vermont small claims certificate of service", filename="small_claims_certificate_of_service_100_00260.pdf", enabled=True, has_addendum=False)
   - VT_small_claims_information_and_instructions_for_defendant_attachment: ALDocument.using(title="BLANK Vermont small claims information and instructions for defendant form 100-00259", filename="Small_Claims_Information_and_Instructions_for_Defendant_100_00259.pdf", has_addendum=False)
   - VT_small_claims_disclosure_of_exempt_income_attachment: ALDocument.using(title="BLANK Vermont small claims disclosure of exempt income form 100-00128", filename="Disclosure_of_Exempt_Income_100_00128.pdf", has_addendum=False)
   - VT_small_claims_answer_attachment: ALDocument.using(title="BLANK Vermont small claims answer form 100-00126", filename="Small_Claims_Answer_100_00126.pdf", has_addendum=False)
