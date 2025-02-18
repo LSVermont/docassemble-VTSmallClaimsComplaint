@@ -714,6 +714,19 @@ fields:
         not al_form_requires_digital_signature
 continue button field: saw_signature_choice    
 ---
+id: persons signature
+generic object: ALIndividual
+question: |
+  % if user_has_attorney:
+  ${ attorneys[0].name }, please sign below
+  % else:
+  ${x}, please sign below
+  % endif
+signature: x.signature
+under: |
+  ${x}
+progress: 99
+---
 code: |
   if user_has_attorney:
     default_printed_signature = attorneys[0].name
