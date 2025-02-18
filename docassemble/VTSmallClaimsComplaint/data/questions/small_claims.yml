@@ -132,6 +132,7 @@ code: |
   set_progress(48)
   
   nav.set_section('case_info')
+  trial_court_division = "Civil"
   user_selected_county
   claim_principal
   claim_interest
@@ -153,7 +154,7 @@ code: |
   interview_order_small_claims_complaint
   nav.set_section("review_small_claims_complaint")
   (claim_principal + claim_interest + (claim_court_fee if wants_to_claim_court_fee else 0))
-  #trial_court.address.county
+  trial_court.address.county
   small_claims_complaint_preview_question
   
   nav.set_section("sign")
@@ -191,7 +192,7 @@ subquestion: |
 
   <i class="fas fa-circle-info fa-2x"></i> It is free to use this program. This site is not a lawyer. Visit our [VTLawHelp.org website](https://vtlawhelp.org/) for legal information.
 
-  Learn about the small claims court process on our Small Claims Roadmap on the [VTLawHelp.org website](https://vtlawhelp.org/roadmap/small-claims/step-1).
+  Learn about the small claims court process on our [Small Claims Roadmap on the VTLawHelp.org website](https://vtlawhelp.org/roadmap/small-claims/step-1).
 
   <p>${ intro_vtcourtforms_created_by }</p>
 
@@ -644,7 +645,7 @@ review:
   - Edit: wants_to_claim_court_fee
     button: |
       **Your court filing fee**:
-      ${ currency(claim_court_fee if wants_to_claim_court_fee else 0) }
+      ${ currency(claim_court_fee) }
 
       **You want to add that court fee to your claim**:
       ${ word(yesno(wants_to_claim_court_fee)) }
@@ -728,6 +729,7 @@ subquestion: |
   <hr>
   
   <h4 style="margin-bottom: 18px;">Documents to download</h4>
+  Download all. Some you will give to the court. You will hold on to the "blank" forms to share with the defendant later. See the Next Steps document for details.
   
   ${ al_user_bundle.download_list_html() }
 
@@ -740,22 +742,17 @@ subquestion: |
   ${ collapse_template(not_seeing_email) }
   ${ collapse_template(log_out_when_done) }
 
-  If you receive public assistance or your income is less than 150% of the Federal Poverty Level, the court may be able to waive your filing fees. If you would like to ask the court to waive your filing fees and service costs you can use VTCourtForms [Fee Waiver tool](https://apps.vtcourtforms.org/run/VTFeeWaiver/#/1). 
-  
-  **Before starting your fee waiver application:**
-  
-  - Make sure you have saved all the documents you need for your small claims complaint.
-
 progress: 100
 ---
 ##################### ATTACHMENTS #####################
 ---
 objects:
-  - VT_small_claims_complaint_attachment: ALDocument.using(title="Vermont small claims complaint form 100-00257", filename="small_claims_complaint_with_info_100_00257.pdf", enabled=True, has_addendum=False)
-  - VT_small_claims_certificate_of_service_attachment: ALDocument.using(title="Vermont small claims certificate of service form 100-00260", filename="small_claims_certificate_of_service_100_00260.pdf", enabled=True, has_addendum=False)
-  - VT_small_claims_information_and_instructions_for_defendant_attachment: ALDocument.using(title="Vermont small claims information and instructions for defendant form 100-00259", filename="Small_Claims_Information_and_Instructions_for_Defendant_100_00259.pdf", has_addendum=False)
-  - VT_small_claims_disclosure_of_exempt_income_attachment: ALDocument.using(title="Vermont small claims disclosure of exempt income form 100-00128", filename="Disclosure_of_Exempt_Income_100_00128.pdf", has_addendum=False)
-  - VT_small_claims_answer_attachment: ALDocument.using(title="Vermont small claims answer form 100-00126", filename="Small_Claims_Answer_100_00126.pdf", has_addendum=False)
+  - VT_small_claims_complaint_attachment: ALDocument.using(title="Vermont small claims complaint form", filename="small_claims_complaint_with_info_100_00257.pdf", enabled=True, has_addendum=False)
+  - VT_small_claims_certificate_of_service_attachment: ALDocument.using(title="Vermont small claims certificate of service form", filename="small_claims_certificate_of_service_100_00260.pdf", enabled=True, has_addendum=False)
+  - VT_small_claims_information_and_instructions_for_defendant_attachment: ALDocument.using(title="BLANK Vermont small claims information and instructions for defendant form 100-00259", filename="Small_Claims_Information_and_Instructions_for_Defendant_100_00259.pdf", has_addendum=False)
+  - VT_small_claims_disclosure_of_exempt_income_attachment: ALDocument.using(title="BLANK Vermont small claims disclosure of exempt income form 100-00128", filename="Disclosure_of_Exempt_Income_100_00128.pdf", has_addendum=False)
+  - VT_small_claims_answer_attachment: ALDocument.using(title="BLANK Vermont small claims answer form 100-00126", filename="Small_Claims_Answer_100_00126.pdf", has_addendum=False)
+  - VT_small_claims_complaint_Post_interview_instructions: ALDocument.using(title="NEXT STEPS - Instructions for filing these forms with the court", filename="small_claims_complaint_next_steps.docx", enabled=True, has_addendum=False)
 ---
 code: |
   VT_small_claims_information_and_instructions_for_defendant_attachment.enabled = True
@@ -764,6 +761,7 @@ code: |
 ---
 objects:
   - al_user_bundle: ALDocumentBundle.using(elements=[
+      VT_small_claims_complaint_Post_interview_instructions,
       VT_small_claims_complaint_attachment, 
       VT_small_claims_certificate_of_service_attachment, 
       VT_small_claims_information_and_instructions_for_defendant_attachment,
@@ -775,6 +773,24 @@ objects:
       filename="VT_small_claims", title="All forms to deliver to court", enabled=True)
 ---
 attachments:
+  - name: Post-interview-Instructions
+    filename: small_claims_complaint_next_steps
+    docx template file: small_claims_complaint_next_steps.docx
+    variable name: VT_small_claims_complaint_Post_interview_instructions[i]
+    skip undefined: True
+    tagged pdf: True
+    fields:
+      - "address_county": ${ trial_court.address.county }
+      - "division": ${ trial_court.division }
+      - "name": ${ trial_court }
+      - "address_address": ${ trial_court.address.address }
+      - "address_unit": ${ trial_court.address.unit }
+      - "address_city": ${ trial_court.address.city }
+      - "address_state": ${ trial_court.address.state }
+      - "address_zip": ${ trial_court.address.zip }
+      - "arbitrary_attribute": ${ trial_court.arbitrary_attribute }
+      - "phone": ${ trial_court.phone }
+      - "email": ${ trial_court.email }
   - name: VT small claims complaint attachment
     filename: small_claims_complaint_with_info_100_00257.pdf
     variable name: VT_small_claims_complaint_attachment[i]        
