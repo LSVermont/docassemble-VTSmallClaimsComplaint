@@ -477,12 +477,12 @@ subquestion: |
   The total amount of your "claim" in small claims courts cannot be more than $10,000. There are three things that make up your total:
 
   - The "principal" (your damages)
-  - Any interest you want to claim on that amount (people often say $0)
+  - Any interest you want to claim on that amount
   - Your court filing fee, if you want to get that amount back from the other party ($65 for claims of $1,000 or less / $90 for more than $1,000)
 
   **Let's start with your damages / the principal.**
   
-  What are your "damages"? How much does the defendant owe you, or how much money did they cause you to lose?
+  What are your "damages"? How much does the defendant owe you, or how much money did they cause you to lose? You should be prepared to explain to the court the amount you enter here.
 
   Special types of damages you should know about:
 
@@ -502,9 +502,11 @@ id: claim interest
 question: |
   How much interest do you want to claim?
 subquestion: |
-  You can leave this blank or say $0.
+  If a debt has gained interest, you can add a separate amount of interest on the small claims complaint form. You should be prepared to explain to the court the amount you enter here.
   
-  Usually, people do not add a separate interest amount on the small claims complaint form, unless a lawyer has told them to do so for some reason.
+  You can also enter $0.
+  
+  If you are not sure whether interest has accumulated on this debt, you can contact a lawyer for advice.
 fields:
   - "Interest you want to claim": claim_interest
     datatype: currency
@@ -576,8 +578,10 @@ continue button field: recap_total_claim
 id: complaint description
 question: |
   What happened?
+subquestion: |
+  Describe why you are suing ${ other_parties }. Be specific about the reasons you are claiming a total of ${ currency((claim_principal + claim_interest + (claim_court_fee if wants_to_claim_court_fee else 0))) }.
 fields:
-  - "In your own words, describe why you are suing ${ other_parties }": complaint_description
+  - "Why are you suing ${ other_parties } for ${ currency((claim_principal + claim_interest + (claim_court_fee if wants_to_claim_court_fee else 0))) }?": complaint_description
     input type: area
     maxlength: 400
 ---
