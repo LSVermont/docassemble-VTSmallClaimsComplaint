@@ -103,6 +103,9 @@ code: |
   non_money_screening
   if non_money_screening:
     non_money_screening_kickout
+  over_six_years_screening
+  if over_six_years_screening:
+    over_six_years_screening_kickout
   fee_screening
   if not fee_screening:
     fee_screening_kickout
@@ -230,7 +233,7 @@ id: important_notes_to_user
 question: |
   Important
 subquestion: |  
-  <i class="fa fa-exclamation-circle fa-2x"></i>  This tool does **not** file your small claims complaint form with the court. You will need to get it to the court yourself such as by email, mail or in person. We will give you instructions when you finish the form.
+  <i class="fa fa-exclamation-circle fa-2x"></i>  This tool does **not** file your small claims complaint form with the court. You will need to get it to the court yourself such as by email, mail or in person. We will give you instructions when you finish.
     
     Let's get started. Tap the Next button.
 continue button field: important_notes_to_user
@@ -292,6 +295,31 @@ question: |
 subquestion: |
   Small claims court **cannot** help if you are asking the court to order someone to do something or stop doing something. That kind of order is called an “injunction.” You cannot use small claims court for an injunction.
 continue button field: non_money_screening_kickout
+buttons:
+  - DELETE your answers: restart
+  - CONTINUE anyway: continue
+---
+id: over six years screening
+question: |
+  Are you suing for damages or a debt that is over six years old? 
+subquestion: |
+  If so, the statute of limitations has passed, and you can no longer collect the debt.
+
+  For example, you cannot win a small claims case if:
+  
+  - the date the defendant was supposed to pay you is more than six years ago, or
+  - the last date the defendant made a payment was more than six years ago, or
+  - the date the defendant destroyed your belongings is more than six years ago.
+fields:
+  - Has it been more than six years?: over_six_years_screening
+    datatype: yesnoradio
+---
+id: over six years screening kickout
+question: |
+  Stop
+subquestion: |
+  Small claims court **cannot** help when a debt or damages were incurred more than six years ago. After six years, Vermont's statute of limitations has passed, and you can no longer collect the debt or damages. You can ask a lawyer for advice on your situation.
+continue button field: over_six_years_screening_kickout
 buttons:
   - DELETE your answers: restart
   - CONTINUE anyway: continue
