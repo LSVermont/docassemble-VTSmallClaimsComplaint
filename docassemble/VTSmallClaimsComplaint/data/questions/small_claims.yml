@@ -103,6 +103,9 @@ code: |
   non_money_screening
   if non_money_screening:
     non_money_screening_kickout
+  over_six_years_screening
+  if over_six_years_screening:
+    over_six_years_screening_kickout
   fee_screening
   if not fee_screening:
     fee_screening_kickout
@@ -230,7 +233,7 @@ id: important_notes_to_user
 question: |
   Important
 subquestion: |  
-  <i class="fa fa-exclamation-circle fa-2x"></i>  This tool does **not** file your small claims complaint form with the court. You will need to get it to the court yourself such as by email, mail or in person. We will give you instructions when you finish the form.
+  <i class="fa fa-exclamation-circle fa-2x"></i>  This tool does **not** file your small claims complaint form with the court. You will need to get it to the court yourself such as by email, mail or in person. We will give you instructions when you finish.
     
     Let's get started. Tap the Next button.
 continue button field: important_notes_to_user
@@ -292,6 +295,31 @@ question: |
 subquestion: |
   Small claims court **cannot** help if you are asking the court to order someone to do something or stop doing something. That kind of order is called an “injunction.” You cannot use small claims court for an injunction.
 continue button field: non_money_screening_kickout
+buttons:
+  - DELETE your answers: restart
+  - CONTINUE anyway: continue
+---
+id: over six years screening
+question: |
+  Are you suing for damages or a debt that is over six years old? 
+subquestion: |
+  If so, the statute of limitations has passed, and you can no longer collect the debt.
+
+  For example, you cannot win a small claims case if:
+  
+  - the date the defendant was supposed to pay you is more than six years ago, or
+  - the last date the defendant made a payment was more than six years ago, or
+  - the date the defendant destroyed your belongings is more than six years ago.
+fields:
+  - Has it been more than six years?: over_six_years_screening
+    datatype: yesnoradio
+---
+id: over six years screening kickout
+question: |
+  Stop
+subquestion: |
+  Small claims court **cannot** help when a debt or damages were incurred more than six years ago. After six years, Vermont's statute of limitations has passed, and you can no longer collect the debt or damages. You can ask a lawyer for advice on your situation.
+continue button field: over_six_years_screening_kickout
 buttons:
   - DELETE your answers: restart
   - CONTINUE anyway: continue
@@ -449,12 +477,12 @@ subquestion: |
   The total amount of your "claim" in small claims courts cannot be more than $10,000. There are three things that make up your total:
 
   - The "principal" (your damages)
-  - Any interest you want to claim on that amount (people often say $0)
+  - Any interest you want to claim on that amount
   - Your court filing fee, if you want to get that amount back from the other party ($65 for claims of $1,000 or less / $90 for more than $1,000)
 
   **Let's start with your damages / the principal.**
   
-  What are your "damages"? How much does the defendant owe you, or how much money did they cause you to lose?
+  What are your "damages"? How much does the defendant owe you, or how much money did they cause you to lose? You should be prepared to explain to the court the amount you enter here.
 
   Special types of damages you should know about:
 
@@ -474,9 +502,11 @@ id: claim interest
 question: |
   How much interest do you want to claim?
 subquestion: |
-  You can leave this blank or say $0.
+  If a debt has gained interest, you can add a separate amount of interest on the small claims complaint form. You should be prepared to explain to the court the amount you enter here.
   
-  Usually, people do not add a separate interest amount on the small claims complaint form, unless a lawyer has told them to do so for some reason.
+  You can also enter $0.
+  
+  If you are not sure whether interest has accumulated on this debt, you can contact a lawyer for advice.
 fields:
   - "Interest you want to claim": claim_interest
     datatype: currency
@@ -548,8 +578,10 @@ continue button field: recap_total_claim
 id: complaint description
 question: |
   What happened?
+subquestion: |
+  Describe why you are suing ${ other_parties }. Be specific about the reasons you are claiming a total of ${ currency((claim_principal + claim_interest + (claim_court_fee if wants_to_claim_court_fee else 0))) }.
 fields:
-  - "In your own words, describe why you are suing ${ other_parties }": complaint_description
+  - "Why are you suing ${ other_parties } for ${ currency((claim_principal + claim_interest + (claim_court_fee if wants_to_claim_court_fee else 0))) }?": complaint_description
     input type: area
     maxlength: 400
 ---
