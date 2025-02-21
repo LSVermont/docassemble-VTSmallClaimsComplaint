@@ -8,7 +8,7 @@ metadata:
   title: >-
     Start a small claims case
   short title: >-
-    Small claims
+    Start small claims case
   description: |-
     Small claims complaint for Vermont courts. Based on Vermont Judiciary paper form 100-00257 (07/2023).
   can_I_use_this_form: |
@@ -39,7 +39,7 @@ metadata:
   languages:
     - en
   jurisdiction: NAM-US-US+VT
-  review_date: 2024-12-27
+  review_date: 2025-02-19
   form_titles:
     - Small Claims
   form_numbers:
@@ -58,7 +58,7 @@ code: |
   github_repo_name = 'docassemble-VTSmallClaimsComplaint'
 ---
 code: |
-  interview_short_title = "Start a small claims case in Vermont"
+  interview_short_title = "Start a small claims case"
 ---
 objects:
   - users: ALPeopleList.using(ask_number=True,target_number=1)
@@ -183,7 +183,7 @@ code: |
 id: basic questions intro screen
 decoration: form-lineal
 question: |
-  ${interview_short_title}
+  **${interview_short_title} in Vermont**
 subquestion: |   
   <p>${ intro_vtcourtforms_3_steps }</p>
   
@@ -609,6 +609,8 @@ id: small claims review screen
 event: review_small_claims
 question: |
   Review your answers
+subquestion: |  
+  ${ review_screen_instructions }
 review:
   - Edit: users[0]
     button: |
@@ -696,7 +698,7 @@ review:
       
   - Edit: complaint_description
     button: |
-      **Why you are suing**:
+      **Why you are suing for ${ currency(claim_principal + claim_interest + (claim_court_fee if wants_to_claim_court_fee else 0)) }. Be specific.**:
       ${ single_paragraph(complaint_description) }
   - Edit: user_selected_county
     button: |
