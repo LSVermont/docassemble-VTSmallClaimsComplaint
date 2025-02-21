@@ -634,7 +634,7 @@ review:
       ###About you    
   - Edit: users.revisit
     button: |
-      ${ users[0] }
+      **${ users[0] }**
 
       Birthdate:
       ${ users[0].birthdate }
@@ -668,21 +668,27 @@ review:
       
       ${ attorneys[0].daytime_phone_number }, ${ attorneys[0].email }
   - note: |
-      ###The other party / defendant   
-  - Edit: other_parties[0]
+      ###The other party / defendant(s)   
+
+  - Edit: other_parties.revisit
     button: |
-      **The defendant**:
-      ${ other_parties[i] }
-  - Edit: other_parties[i].birthdate
-    button: |
-      **Defendant birthdate**:
-      % if other_parties[i].person_type == "ALIndividual":
-        ${ other_parties[i].birthdate }
+      % for item in other_parties:
+      **${ item.name }**
+
+      % if item.person_type == "ALIndividual":
+      Birthdate:
+      % if defined("item.birthdate"):
+      ${ item.birthdate }
+      % else:
+      Unknown
       % endif
-  - Edit: other_parties[i].address
-    button: |
-      **Defendant address**:
-      ${ other_parties[i].address }
+      % endif
+      
+      Address:
+      
+      ${ item.address }
+
+      % endfor
   - note: |
       ###Your claim  
   - Edit: 
@@ -725,7 +731,7 @@ review:
       ${ single_paragraph(complaint_description) }
   - Edit: user_selected_county
     button: |
-      **Court you will file in**:
+      **Court where you will file this complaint**:
       Small claims court in ${ user_selected_county } County
 ---
 id: users.revisit
@@ -763,6 +769,31 @@ edit:
   - email
   - daytime_phone_number
   - signature
+confirm: True
+---
+id: other_parties.revisit
+continue button field: other_parties.revisit
+question: |
+  Edit info about the other party / defendant(s)
+subquestion: |
+  ${ other_parties.table }
+
+  ${ other_parties.add_action() }
+---
+id: other_parties.table
+table: other_parties.table
+rows: other_parties
+columns:
+  - Name: |
+      row_item.name.full() if defined("row_item.name.first") else ""
+  - Birthdate: |
+      row_item.birthdate if defined("row_item.birthdate") else ""
+  - Address: |
+      row_item.address.block() if defined("row_item.address.address") else ""
+edit:
+  - name.first
+  - birthdate
+  - address.address
 confirm: True
 ---
 id: Signing your forms
