@@ -630,12 +630,13 @@ question: |
 subquestion: |  
   ${ review_screen_instructions }
 review:
+  - note: |
+      ###About you    
   - Edit: users[0]
     button: |
-      **About you**:
       ${ users[0] }
 
-      - Birthdate:
+      Birthdate:
       ${ users[0].birthdate }
   - Edit: users[0].address
     button: |
@@ -665,6 +666,8 @@ review:
       ${ attorneys[0].address }
       
       ${ attorneys[0].daytime_phone_number }, ${ attorneys[0].email }
+  - note: |
+      ###The other party / defendant   
   - Edit: other_parties[0]
     button: |
       **The defendant**:
@@ -678,8 +681,9 @@ review:
   - Edit: other_parties[i].address
     button: |
       **Defendant address**:
-      
       ${ other_parties[i].address }
+  - note: |
+      ###Your claim  
   - Edit: 
       - claim_principal
       - recompute: 
@@ -701,7 +705,7 @@ review:
 
       **You want to add that court fee to your claim**:
       ${ word(yesno(wants_to_claim_court_fee)) }
-
+  - note: |
       % if (claim_principal + claim_interest + (claim_court_fee if wants_to_claim_court_fee else 0)) > 10000:
       <i class="fas fa-hand-paper fa-3x" aria-hidden="true"></i>  **STOP!**
   
