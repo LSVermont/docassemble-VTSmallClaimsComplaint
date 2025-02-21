@@ -63,7 +63,7 @@ code: |
 objects:
   - users: ALPeopleList.using(ask_number=True,target_number=1)
   - attorneys: ALPeopleList.using(ask_number=True,target_number=1)
-  - other_parties: ALPeopleList.using(ask_number=True,target_number=1)
+  - other_parties: ALPeopleList.using(object_type=ALIndividual, there_are_any=True, complete_attribute='complete')
 ---
 objects:
   - all_courts: ALCourtLoader.using(file_name='docassemble.VTSharedYMLFile:data/sources/courts_list_full.xlsx')
@@ -127,11 +127,7 @@ code: |
     attorneys[0].email
   
   nav.set_section('other_party')
-  other_parties.there_are_any = True
   other_parties.gather()
-  if other_parties[0].person_type == "ALIndividual":
-    other_parties[0].birthdate
-  other_parties[0].address.address
   set_progress(48)
   
   nav.set_section('case_info')
@@ -428,6 +424,13 @@ fields:
 ---
 ############################### DEFENDANT INFO ###############################
 ---
+code: |
+  other_parties[i].name.first
+  if other_parties[i].person_type == "ALIndividual":
+    other_parties[i].birthdate
+  other_parties[i].address.address
+  other_parties[i].complete = True
+---
 id: names of opposing parties
 sets:
   - other_parties[i].name.first
@@ -443,14 +446,29 @@ fields:
       other_parties[i].name_fields(person_or_business='unsure')
 ---
 id: birthdate question
-generic object: ALIndividual
 question: |
-  When was ${x} born?
+  When was ${ other_parties[i] } born?
 subquestion: |
   You can leave this blank if you do not know.
 fields:
-  - Birthdate: x.birthdate
+  - Birthdate: other_parties[i].birthdate
     datatype: BirthDate
+    required: False
+---
+id: gather defendant's street address
+question: |
+  What is ${ other_parties[i] }'s address?  
+fields:
+  - Address: other_parties[i].address.address
+    address autocomplete: True
+  - Unit: other_parties[i].address.unit
+    required: False
+  - City: other_parties[i].address.city
+  - State: other_parties[i].address.state
+    code: |
+      states_list()
+    default: VT
+  - Zip or postal code: other_parties[i].address.zip
     required: False
 ---
 ############################### CASE INFO ###############################
@@ -648,18 +666,18 @@ review:
   - Edit: other_parties[0]
     button: |
       **The defendant**:
-      ${ other_parties[0] }
-  - Edit: other_parties[0].birthdate
+      ${ other_parties[i] }
+  - Edit: other_parties[i].birthdate
     button: |
       **Defendant birthdate**:
-      % if other_parties[0].person_type == "ALIndividual":
-        ${ other_parties[0].birthdate }
+      % if other_parties[i].person_type == "ALIndividual":
+        ${ other_parties[i].birthdate }
       % endif
-  - Edit: other_parties[0].address
+  - Edit: other_parties[i].address
     button: |
       **Defendant address**:
       
-      ${ other_parties[0].address }
+      ${ other_parties[i].address }
   - Edit: 
       - claim_principal
       - recompute: 
@@ -818,22 +836,9 @@ progress: 100
 ##################### ATTACHMENTS #####################
 ---
 objects:
-  - VT_small_claims_complaint_attachment: ALDocument.using(title="Vermont small claims complaint", filename="small_claims_complaint_with_info_100_00257.pdf", enabled=True, has_addendum=False)
-  - VT_small_claims_certificate_of_service_attachment: ALDocument.using(title="Vermont small claims certificate of service", filename="small_claims_certificate_of_service_100_00260.pdf", enabled=True, has_addendum=False)
-  - VT_small_claims_information_and_instructions_for_defendant_attachment: ALDocument.using(title="BLANK Vermont small claims information and instructions for defendant form 100-00259", filename="Small_Claims_Information_and_Instructions_for_Defendant_100_00259.pdf", has_addendum=False)
-  - VT_small_claims_disclosure_of_exempt_income_attachment: ALDocument.using(title="BLANK Vermont small claims disclosure of exempt income form 100-00128", filename="Disclosure_of_Exempt_Income_100_00128.pdf", has_addendum=False)
-  - VT_small_claims_answer_attachment: ALDocument.using(title="BLANK Vermont small claims answer form 100-00126", filename="Small_Claims_Answer_100_00126.pdf", has_addendum=False)
-  - VT_small_claims_complaint_Post_interview_instructions: ALDocument.using(title="NEXT STEPS - Instructions for filing these forms with the court", filename="small_claims_complaint_next_steps.docx", enabled=True, has_addendum=False)
----
-code: |
-  VT_small_claims_information_and_instructions_for_defendant_attachment.enabled = True
-  VT_small_claims_answer_attachment.enabled = True
-  VT_small_claims_disclosure_of_exempt_income_attachment.enabled = True
----
-objects:
   - al_user_bundle: ALDocumentBundle.using(elements=[
       VT_small_claims_complaint_Post_interview_instructions,
-      VT_small_claims_complaint_attachment, 
+      VT_small_claims_complaint_attachment,
       VT_small_claims_certificate_of_service_attachment, 
       VT_small_claims_information_and_instructions_for_defendant_attachment,
       VT_small_claims_answer_attachment,
@@ -842,6 +847,28 @@ objects:
   - al_court_bundle: ALDocumentBundle.using(elements=[
       VT_small_claims_complaint_attachment], 
       filename="VT_small_claims", title="All forms to deliver to court", enabled=True)
+---
+objects:
+  - VT_small_claims_complaint_attachment: ALDocument.using(title="Vermont small claims complaint", filename="small_claims_complaint_with_info_100_00257.pdf", enabled=True, has_addendum=True, default_overflow_message="[See addendum]")
+  - VT_small_claims_certificate_of_service_attachment: ALDocument.using(title="Vermont small claims certificate of service", filename="small_claims_certificate_of_service_100_00260.pdf", enabled=True, has_addendum=False)
+  - VT_small_claims_information_and_instructions_for_defendant_attachment: ALDocument.using(title="BLANK Vermont small claims information and instructions for defendant form 100-00259", filename="Small_Claims_Information_and_Instructions_for_Defendant_100_00259.pdf", enabled=True, has_addendum=False)
+  - VT_small_claims_disclosure_of_exempt_income_attachment: ALDocument.using(title="BLANK Vermont small claims disclosure of exempt income form 100-00128", filename="Disclosure_of_Exempt_Income_100_00128.pdf", enabled=True, has_addendum=False)
+  - VT_small_claims_answer_attachment: ALDocument.using(title="BLANK Vermont small claims answer form 100-00126", filename="Small_Claims_Answer_100_00126.pdf", enabled=True, has_addendum=False)
+  - VT_small_claims_complaint_Post_interview_instructions: ALDocument.using(title="NEXT STEPS - Instructions for filing these forms with the court", filename="small_claims_complaint_next_steps.docx", enabled=True, has_addendum=False)
+---
+attachment:
+  variable name: VT_small_claims_complaint_attachment.addendum
+  docx template file: VT_small_claims_complaint_addendum.docx
+---
+code: |
+  VT_small_claims_complaint_attachment.overflow_fields['other_parties'].overflow_trigger = 1
+  VT_small_claims_complaint_attachment.overflow_fields['other_parties'].label = "Additional defendants:"
+  VT_small_claims_complaint_attachment.overflow_fields['other_parties'].headers = [
+    {"name": "Name"},
+    {"birthdate": "Birthdate"},
+    {"address": "Address"},
+  ]
+  VT_small_claims_complaint_attachment.overflow_fields.gathered = True  
 ---
 attachments:
   - name: Post-interview-Instructions
@@ -879,8 +906,8 @@ attachments:
       - "users1_attorneys_name": ${ attorneys[0] }
       - "users1_attorneys_address_line_one": ${ attorneys[0].address.line_one() }
       - "users1_attorneys_address_line_two": ${ attorneys[0].address.line_two() }
-      - "other_parties1_name": ${ other_parties.short_list(2) }
-      - "other_parties1_name1": ${ other_parties.short_list(2) }
+      - "other_parties1_name": ${ other_parties.short_list(1) if other_parties.number_gathered() > 1 else other_parties[0]}
+      - "other_parties1_name1": ${ other_parties[0] }
       - "other_parties1_address_line_one": ${ other_parties[0].address.line_one() }
       - "other_parties1_address_line_two": ${ other_parties[0].address.line_two() }
       - "other_parties1_birthdate": |
