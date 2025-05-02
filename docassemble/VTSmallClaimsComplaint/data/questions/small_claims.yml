@@ -10,7 +10,7 @@ metadata:
   short title: >-
     Start small claims case
   description: |-
-    Small claims complaint for Vermont courts. Based on Vermont Judiciary paper form 100-00257 (07/2023).
+    Small claims complaint for Vermont courts. Based on Vermont Judiciary paper form 100-00257 (03/2025), as well as Small Claims Certificate of Service form 100-00260 (04/2024).
   can_I_use_this_form: |
     If you live in Vermont and are seeking $10,000 or less, you can use this tool to start a small claims case.
   before_you_start: |
@@ -62,7 +62,7 @@ code: |
 ---
 objects:
   - users: ALPeopleList.using(ask_number=True,target_number=1)
-  - attorneys: ALPeopleList.using(ask_number=True,target_number=1)
+  - attorneys: ALPeopleList.using(ask_number=True,target_number=1,)
   - other_parties: ALPeopleList.using(object_type=ALIndividual, there_are_any=True, complete_attribute='complete')
 ---
 objects:
@@ -107,8 +107,6 @@ code: |
   if over_six_years_screening:
     over_six_years_screening_kickout
   fee_screening
-  if not fee_screening:
-    fee_screening_kickout
   set_progress(16)
   
   nav.set_section('about_you')
@@ -122,6 +120,7 @@ code: |
   if user_has_attorney:
     attorney_screening_kickout
     attorneys.gather()
+    attorneys[0].name
     attorneys[0].address.address
     attorneys[0].email
   
@@ -184,7 +183,7 @@ subquestion: |
   
   <i class="fas fa-file-text fa-2x"></i> This tool will produce a completed Small Claims Complaint form 100-00257 for Vermont courts. It is used when you want to sue a person, business or organization for $10,000 or less.
 
-  <i class="fas fa-envelope fa-2x"></i> The tool will also give you some blank forms that you will send to the person, business or organization in a later step in the small claims process. We will give you instructions at the end in the Next Steps document.
+  <i class="fas fa-envelope fa-2x"></i> The tool will also give you some blank forms that you will send to the person, business or organization in a later step in the small claims process. It will also produce a Small Claims Certificate of Service form for you to use. We will give you instructions at the end in the Next Steps document.
   
   <i class="fas fa-clock fa-2x"></i> It may take you 30 minutes to complete this.
 
@@ -386,13 +385,13 @@ id: phone and email
 question: |
   Your contact information
 fields:
-  - "Your home phone number or cell number:": users[0].phone_number
+  - "Home phone number or cell number:": users[0].phone_number
     maxlength: 16
     required: False
-  - "Your work phone number or other number:": users[0].work_phone_number
+  - "Work phone number or other number:": users[0].work_phone_number
     maxlength: 16
     required: False
-  - "Your email address:": users[0].email
+  - "Email address:": users[0].email
     maxlength: 38
     required: False
 ---
@@ -423,8 +422,15 @@ question: |
 fields:
   - "Their daytime phone number:": attorneys[0].daytime_phone_number
     maxlength: 27
+    required: False
   - "Their email address:": attorneys[0].email
     maxlength: 38
+    required: False
+---
+generic object: ALAddress
+template: x.unit_label
+content: |
+  Unit
 ---
 ############################### DEFENDANT INFO ###############################
 ---
@@ -502,15 +508,15 @@ subquestion: |
   - Any interest you want to claim on that amount
   - Your court filing fee, if you want to get that amount back from the other party ($65 for claims of $1,000 or less, or $90 for more than $1,000)
 
-  **Let's start with your damages / the principal.**
+  **Let's start with the principal (your damages).**
   
   What are your "damages"? How much does the defendant owe you, or how much money did they cause you to lose? You should be prepared to explain to the court the amount you enter here.
 
   Special types of damages you should know about:
 
-  - Are you suing a former landlord over a security deposit? You can ask for double the total amount of the deposit if your landlord kept the deposit without a written reason, or if they waited more than 14 days to get your deposit back to you. See the [Security Deposit Roadmap on VTLawHelp.org](https://vtlawhelp.org/roadmap/security-deposit/step-1) for more information.
+  - Are you suing a former landlord over a security deposit? You can ask for double the total amount of the deposit if your landlord kept the deposit without a written reason, or if they waited more than 14 days to get your deposit back to you. See the [Security Deposit Roadmap on VTLawHelp.org](https://vtlawhelp.org/roadmap/security-deposit/step-5) for more information.
   
-  - Are you a customer suing a business over a product or service that they sold you? You may be entitled to triple the amount you spent on the product or service, if the business lied to you about the product or service.
+  - Are you a customer suing a business over a product or service that they sold you? You may be entitled to triple the amount you spent on the product or service, if the business lied to you about the product or service. [Read the law.](https://legislature.vermont.gov/statutes/section/09/063/02461)
 fields:
   - "Damages / principal you want to claim": claim_principal
     datatype: currency
@@ -636,7 +642,8 @@ subquestion: |
   ${ review_screen_instructions }
 review:
   - note: |
-      ###About you    
+      ###About you
+      
   - Edit: users.revisit
     button: |
       **${ users[0] }**
@@ -648,18 +655,28 @@ review:
       
       ${ users[0].address }
 
-      % if defined("users[0].mailing_address"):
+      % if defined("users[0].mailing_address.address"):
       Mailing address:
 
       ${ users[0].mailing_address }
-
       % endif
+      
+      % if defined("users[0].email"):
       ${ users[0].email }
-
+      % endif
+      
+      % if defined("users[0].phone_number"):
       ${ users[0].phone_number }
-
+      % endif
+      
+      % if defined("users[0].work_phone_number"):
       ${ users[0].work_phone_number }
-  - Edit: user_has_attorney
+      % endif
+          
+  - Edit: 
+      - user_has_attorney
+      - follow up:
+          - attorneys.revisit
     button: |
       **You have a lawyer for this case**:
       % if user_has_attorney:
@@ -667,17 +684,21 @@ review:
       % else:
       No
       % endif 
-  - Edit: attorneys[0].address.address
+  - Edit: attorneys.revisit
     button: |
       **Your lawyer**:
 
       ${ attorneys[0].name }
       
       ${ attorneys[0].address }
-      
+
+      % if defined("attorneys[0].email"):
       ${ attorneys[0].email }
+      % endif 
       
+      % if defined("attorneys[0].daytime_phone_number"):
       ${ attorneys[0].daytime_phone_number }
+      % endif 
   - note: |
       ###The other party / defendant(s)   
 
@@ -744,6 +765,12 @@ review:
     button: |
       **Court where you will file this complaint**:
       Small claims court in ${ user_selected_county } County
+
+  - Edit: documents_attached_to_complaint
+    button: |
+      **You are including supporting documents with your small claims complaint**: ${ word(yesno(documents_attached_to_complaint)) }
+
+      (This question is for the Certificate of Service form that this tool produces.)
 ---
 id: users.revisit
 continue button field: users.revisit
@@ -771,7 +798,7 @@ columns:
   - Home or cell phone: |
       row_item.phone_number if defined("row_item.phone_number") else ""
   - Work or other phone: |
-      row_item.phone_number if defined("row_item.phone_number") else ""
+      row_item.work_phone_number if defined("row_item.work_phone_number") else ""
   - Signature: |
       row_item.signature if defined("row_item.signature") else ""
 edit:
@@ -783,6 +810,34 @@ edit:
   - phone_number
   - work_phone_number
   - signature
+confirm: True
+---
+id: attorneys.revisit
+continue button field: attorneys.revisit
+question: |
+  Edit info about your lawyer
+subquestion: |
+  ${ attorneys.table }
+
+  ${ attorneys.add_action() }
+---
+id: attorneys.table
+table: attorneys.table
+rows: attorneys
+columns:
+  - Name: |
+      row_item.name.full() if defined("row_item.name.first") else ""
+  - Address: |
+      row_item.address.block() if defined("row_item.address.address") else ""
+  - Phone: |
+      row_item.phone_number if defined("row_item.phone_number") else ""
+  - Email: |
+      row_item.email if defined("row_item.email") else ""
+edit:
+  - name.first
+  - address.address
+  - phone.number
+  - email
 confirm: True
 ---
 id: other_parties.revisit
@@ -810,22 +865,29 @@ edit:
   - address.address
 confirm: True
 ---
+code: |
+  if len(attorneys) > 0:
+    default_printed_signature = attorneys[0].name
+  else:
+    default_printed_signature = users[0].name
+---
 id: signing your forms
 question: |
   Signature date
 fields:
   - "This is how the name will appear under the signature.": printed_signature
     default: |
-        ${ default_printed_signature }
+      ${ default_printed_signature }
     maxlength: 34
+    required: False
 
   - note: |
       You said you had a lawyer. Do you want to sign the form yourself? Or have your lawyer sign it, either now or later?
-    show if: user_has_attorney
+    show if: len(attorneys) > 0
 
   - "I'd rather sign it myself": user_wants_to_sign_form_themselves
     datatype: yesno
-    show if: user_has_attorney
+    show if: len(attorneys) > 0
     
   - "Date of the signature for the form": signature_date
     datatype: date
@@ -836,12 +898,6 @@ fields:
        You can change this date later if you want.
        
        **Tap Next to choose how to sign your documents.**
----
-code: |
-  if user_has_attorney:
-    default_printed_signature = attorneys[0].name
-  else:
-    default_printed_signature = users[0].name
 ---
 id: signature choice
 decoration: file-signature
