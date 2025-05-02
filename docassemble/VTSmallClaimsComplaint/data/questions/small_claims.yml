@@ -26,8 +26,8 @@ metadata:
     - Kelly McGuire, Lemma Legal
     - Kris Surette, Legal Services Vermont
   original_form:
-    - NA
-  original_form_published_on: ""
+    - https://www.vermontjudiciary.org/media/38
+  original_form_published_on: March 2025
   help_page_url: >-
     https://vtlawhelp.org/roadmap/small-claims/step-1
   help_page_title: >-
@@ -115,7 +115,7 @@ code: |
   users.gather()
   users[0].birthdate
   users[0].address.address
-  users[0].daytime_phone_number
+  users[0].phone_number
   users[0].email
   set_progress(32)
   user_has_attorney
@@ -123,7 +123,6 @@ code: |
     attorney_screening_kickout
     attorneys.gather()
     attorneys[0].address.address
-    attorneys[0].daytime_phone_number
     attorneys[0].email
   
   nav.set_section('other_party')
@@ -387,8 +386,10 @@ id: phone and email
 question: |
   Your contact information
 fields:
-  - "Your daytime phone number:": users[0].daytime_phone_number
-    maxlength: 27
+  - "Your home phone number or cell number:": users[0].phone_number
+    maxlength: 16
+  - "Your work phone number or other number:": users[0].work_phone_number
+    maxlength: 16
   - "Your email address:": users[0].email
     maxlength: 38
 ---
@@ -651,7 +652,9 @@ review:
       % endif
       ${ users[0].email }
 
-      ${ users[0].daytime_phone_number }
+      ${ users[0].phone_number }
+
+      ${ users[0].work_phone_number }
   - Edit: user_has_attorney
     button: |
       **You have a lawyer for this case**:
@@ -757,8 +760,10 @@ columns:
       row_item.mailing_address.block() if defined("row_item.mailing_address.address") else ""
   - Email: |
       row_item.email if defined("row_item.email") else ""
-  - Phone: |
-      row_item.daytime_phone_number if defined("row_item.daytime_phone_number") else ""
+  - Home or cell phone: |
+      row_item.phone_number if defined("row_item.phone_number") else ""
+  - Work or other phone: |
+      row_item.phone_number if defined("row_item.phone_number") else ""
   - Signature: |
       row_item.signature if defined("row_item.signature") else ""
 edit:
@@ -767,7 +772,8 @@ edit:
   - address.address
   - mailing_address.address
   - email
-  - daytime_phone_number
+  - phone_number
+  - work_phone_number
   - signature
 confirm: True
 ---
@@ -976,7 +982,8 @@ attachments:
       - "users1_address_line_one": ${ users[0].address.line_one() }
       - "users1_address_line_two": ${ users[0].address.line_two() }
       - "users1_birthdate": ${ format_date(users[0].birthdate, format='M/d/yyyy') }
-      - "users1_daytime_phone_number": ${ phone_number_formatted(users[0].daytime_phone_number) }
+      - "users1_phone_number": ${ phone_number_formatted(users[0].phone_number) }
+      - "users1_work_phone_number": ${ phone_number_formatted(users[0].work_phone_number) }
       - "users1_email": ${ users[0].email }
       - "users1_attorneys_name": ${ attorneys[0] }
       - "users1_attorneys_address_line_one": ${ attorneys[0].address.line_one() }
@@ -1014,7 +1021,7 @@ attachments:
       - "users1_name_1": ${ attorneys[0] if user_has_attorney else users[0] }
       - "users1_address_mailing_line_one": ${ attorneys[0].address.line_one() if user_has_attorney else users[0].address.line_one() }
       - "users1_address_mailing_line_two": ${ attorneys[0].address.line_two() if user_has_attorney else users[0].address.line_two() }
-      - "users1_daytime_phone_number": ${ phone_number_formatted(attorneys[0].daytime_phone_number) if user_has_attorney else phone_number_formatted(users[0].daytime_phone_number) }
+      - "users1_phone_number": ${ phone_number_formatted(attorneys[0].daytime_phone_number) if user_has_attorney else phone_number_formatted(users[0].phone_number) }
       - "users1_email": ${ attorneys[0].email if user_has_attorney else users[0].email }
       - "other_parties1_name": ${ other_parties.short_list(2) }
       - "mailed_summons": Yes
