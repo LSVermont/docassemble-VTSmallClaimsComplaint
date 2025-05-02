@@ -799,8 +799,6 @@ columns:
       row_item.phone_number if defined("row_item.phone_number") else ""
   - Work or other phone: |
       row_item.work_phone_number if defined("row_item.work_phone_number") else ""
-  - Signature: |
-      row_item.signature if defined("row_item.signature") else ""
 edit:
   - name.first
   - birthdate
@@ -809,7 +807,6 @@ edit:
   - email
   - phone_number
   - work_phone_number
-  - signature
 confirm: True
 ---
 id: attorneys.revisit
@@ -1085,8 +1082,18 @@ attachments:
       - "users1_name": ${ users[0] }
       - "users1_name_full": ${ attorneys[0] if user_has_attorney else users[0] }
       - "users1_name_1": ${ attorneys[0] if user_has_attorney else users[0] }
-      - "users1_address_mailing_line_one": ${ attorneys[0].address.line_one() if user_has_attorney else users[0].address.line_one() }
-      - "users1_address_mailing_line_two": ${ attorneys[0].address.line_two() if user_has_attorney else users[0].address.line_two() }
+      - "users1_address_mailing_line_one": |
+          % if defined("users[0].mailing_address.address"):
+          ${ attorneys[0].address.line_one() if user_has_attorney else users[0].mailing_address.line_one() }
+          % else:
+          ${ attorneys[0].address.line_one() if user_has_attorney else users[0].address.line_one() }
+          % endif
+      - "users1_address_mailing_line_two":  |
+          % if defined("users[0].mailing_address.address"):
+          ${ attorneys[0].address.line_two() if user_has_attorney else users[0].mailing_address.line_two() }
+          % else:
+          ${ attorneys[0].address.line_two() if user_has_attorney else users[0].address.line_two() }
+          % endif
       - "users1_phone_number": ${ phone_number_formatted(attorneys[0].daytime_phone_number) if user_has_attorney else phone_number_formatted(users[0].phone_number) }
       - "users1_email": ${ attorneys[0].email if user_has_attorney else users[0].email }
       - "other_parties1_name": ${ other_parties.short_list(2) }
