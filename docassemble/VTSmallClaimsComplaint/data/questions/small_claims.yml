@@ -388,10 +388,13 @@ question: |
 fields:
   - "Your home phone number or cell number:": users[0].phone_number
     maxlength: 16
+    required: False
   - "Your work phone number or other number:": users[0].work_phone_number
     maxlength: 16
+    required: False
   - "Your email address:": users[0].email
     maxlength: 38
+    required: False
 ---
 id: users lawyer
 question: |
@@ -497,7 +500,7 @@ subquestion: |
 
   - The "principal" (your damages)
   - Any interest you want to claim on that amount
-  - Your court filing fee, if you want to get that amount back from the other party ($65 for claims of $1,000 or less / $90 for more than $1,000)
+  - Your court filing fee, if you want to get that amount back from the other party ($65 for claims of $1,000 or less, or $90 for more than $1,000)
 
   **Let's start with your damages / the principal.**
   
@@ -602,7 +605,7 @@ subquestion: |
 fields:
   - "Why are you suing ${ other_parties } for ${ currency((claim_principal + claim_interest + (claim_court_fee if wants_to_claim_court_fee else 0))) }?": complaint_description
     input type: area
-    maxlength: 400
+    maxlength: 1130
 ---
 id: documents attached to complaint
 question: |
@@ -614,7 +617,8 @@ subquestion: |
   
   - contracts
   - photos
-  - emails or texts
+  - receipts
+  - letters, emails or texts
 
   If you include copies of supporting documents with your small claims complaint, later you will need to send copies to the defendant, too.
   
@@ -665,11 +669,15 @@ review:
       % endif 
   - Edit: attorneys[0].address.address
     button: |
-      **Lawyer contact information**:
+      **Your lawyer**:
+
+      ${ attorneys[0].name }
       
       ${ attorneys[0].address }
       
-      ${ attorneys[0].daytime_phone_number }, ${ attorneys[0].email }
+      ${ attorneys[0].email }
+      
+      ${ attorneys[0].daytime_phone_number }
   - note: |
       ###The other party / defendant(s)   
 
@@ -802,16 +810,24 @@ edit:
   - address.address
 confirm: True
 ---
-id: Signing your forms
+id: signing your forms
 question: |
   Signature date
 fields:
-  - "This is how your name will appear under your signature.": printed_signature
+  - "This is how the name will appear under the signature.": printed_signature
     default: |
         ${ default_printed_signature }
     maxlength: 34
 
-  - "Date of your signature for these forms": signature_date
+  - note: |
+      You said you had a lawyer. Do you want to sign the form yourself? Or have your lawyer sign it, either now or later?
+    show if: user_has_attorney
+
+  - "I'd rather sign it myself": user_wants_to_sign_form_themselves
+    datatype: yesno
+    show if: user_has_attorney
+    
+  - "Date of the signature for the form": signature_date
     datatype: date
     required: False
     default: |
@@ -820,6 +836,12 @@ fields:
        You can change this date later if you want.
        
        **Tap Next to choose how to sign your documents.**
+---
+code: |
+  if user_has_attorney:
+    default_printed_signature = attorneys[0].name
+  else:
+    default_printed_signature = users[0].name
 ---
 id: signature choice
 decoration: file-signature
@@ -848,21 +870,9 @@ continue button field: saw_signature_choice
 id: persons signature
 generic object: ALIndividual
 question: |
-  % if user_has_attorney:
-  ${ attorneys[0].name }, please sign below
-  % else:
-  ${x}, please sign below
-  % endif
+  Please sign below
 signature: x.signature
-under: |
-  ${x}
 progress: 99
----
-code: |
-  if user_has_attorney:
-    default_printed_signature = attorneys[0].name
-  else:
-    default_printed_signature = users[0].name
 ---
 ##################### PREVIEW SCREEN #######################
 ---
@@ -871,7 +881,7 @@ question: |
   Preview your form before you sign it
 subquestion: |
   
-  Here is a preview of the form you will sign on the next screen. 
+  Here is a preview of the form you will sign on the next screen. You will notice that the Judiciary includes two pages of instructions with the Small Claims Complaint form.
   
   ${ al_court_bundle.as_pdf(key='preview') }
 
@@ -899,7 +909,7 @@ subquestion: |
   <hr>
   
   <h4 style="margin-bottom: 18px;">Documents to download</h4>
-  Download all. Some you will give to the court. You will hold on to the "blank" forms to share with the defendant later. See the Next Steps document for details.
+  <i class="fa fa-exclamation-circle fa-2x"></i>   Download all of these documents. Some you will give to the court **now**. You will hold on to the "blank" forms to share with the defendant **later**. See the Next Steps document for details.
   
   ${ al_user_bundle.download_list_html() }
 
@@ -934,7 +944,7 @@ objects:
   - VT_small_claims_certificate_of_service_attachment: ALDocument.using(title="Vermont small claims certificate of service", filename="small_claims_certificate_of_service_100_00260.pdf", enabled=True, has_addendum=False)
   - VT_small_claims_information_and_instructions_for_defendant_attachment: ALDocument.using(title="BLANK Vermont small claims information and instructions for defendant form 100-00259", filename="Small_Claims_Information_and_Instructions_for_Defendant_100_00259.pdf", enabled=True, has_addendum=False)
   - VT_small_claims_disclosure_of_exempt_income_attachment: ALDocument.using(title="BLANK Vermont small claims disclosure of exempt income form 100-00128", filename="Disclosure_of_Exempt_Income_100_00128.pdf", enabled=True, has_addendum=False)
-  - VT_small_claims_answer_attachment: ALDocument.using(title="BLANK Vermont small claims answer form 100-00126", filename="Small_Claims_Answer_100_00126.pdf", enabled=True, has_addendum=False)
+  - VT_small_claims_answer_attachment: ALDocument.using(title="BLANK Vermont small claims answer form 100-00126", filename="100-00126_Small_Claims_Answer.pdf", enabled=True, has_addendum=False)
   - VT_small_claims_complaint_Post_interview_instructions: ALDocument.using(title="NEXT STEPS - Instructions for filing these forms with the court", filename="small_claims_complaint_next_steps.docx", enabled=True, has_addendum=False)
 ---
 attachment:
@@ -1038,7 +1048,7 @@ attachment:
 ---
 attachment:
   variable name: VT_small_claims_answer_attachment[i]
-  pdf template file: Small_Claims_Answer_100_00126.pdf
+  pdf template file: 100-00126_Small_Claims_Answer.pdf
   fields:
     - "fake_field": ''
 ---
