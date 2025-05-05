@@ -386,10 +386,10 @@ question: |
   Your contact information
 fields:
   - "Home phone number or cell number:": users[0].phone_number
-    maxlength: 16
+    datatype: al_international_phone
     required: False
   - "Work phone number or other number:": users[0].work_phone_number
-    maxlength: 16
+    datatype: al_international_phone
     required: False
   - "Email address:": users[0].email
     maxlength: 38
@@ -421,7 +421,7 @@ question: |
   ${ attorneys[0].name }'s contact information
 fields:
   - "Their daytime phone number:": attorneys[0].daytime_phone_number
-    maxlength: 27
+    datatype: al_international_phone
     required: False
   - "Their email address:": attorneys[0].email
     maxlength: 38
@@ -762,8 +762,12 @@ review:
       ${ single_paragraph(complaint_description) }
   - Edit: user_selected_county
     button: |
-      **Court where you will file this complaint**:
+      **Court where you will file the Complaint form**:
       Small claims court in ${ user_selected_county } County
+  - Edit: signature_date
+    button: |
+      **Date of the signature on the Complaint**:
+      ${ signature_date }
 
   - Edit: documents_attached_to_complaint
     button: |
@@ -829,13 +833,13 @@ columns:
   - Address: |
       row_item.address.block() if defined("row_item.address.address") else ""
   - Phone: |
-      row_item.phone_number if defined("row_item.phone_number") else ""
+      row_item.daytime_phone_number if defined("row_item.daytime_phone_number") else ""
   - Email: |
       row_item.email if defined("row_item.email") else ""
 edit:
   - name.first
   - address.address
-  - phone.number
+  - daytime_phone_number
   - email
 confirm: True
 ---
