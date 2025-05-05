@@ -671,7 +671,12 @@ review:
       % if defined("users[0].work_phone_number"):
       ${ users[0].work_phone_number }
       % endif
-          
+
+      % if defined("users[0].signature"):
+      Signature on form:
+      
+      ${ users[0].signature }
+      % endif
   - Edit: 
       - user_has_attorney
       - follow up:
@@ -1059,12 +1064,12 @@ attachments:
       - "other_parties1_address_line_one": ${ other_parties[0].address.line_one() }
       - "other_parties1_address_line_two": ${ other_parties[0].address.line_two() }
       - "other_parties1_birthdate": |
-          % if other_parties[0].birthdate == null:
-            ${ "" }
-          % elif other_parties[0].person_type == "ALIndividual":
-            ${ format_date(other_parties[0].birthdate, format='M/d/yyyy') }
+          % if other_parties[0].person_type == "ALIndividual":
+          % if defined("other_parties[0].birthdate"):
+          ${ format_date(other_parties[0].birthdate, format='M/d/yyyy') }
           % else:
-            ${ "" }
+          ""
+          % endif
           % endif
       - "claim_amount_principal": ${ thousands(claim_principal,show_decimals=True) }
       - "claim_amount_interest": ${ thousands(claim_interest,show_decimals=True) }
