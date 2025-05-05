@@ -10,13 +10,13 @@ metadata:
   short title: >-
     Start small claims case
   description: |-
-    Small claims complaint for Vermont courts. Based on Vermont Judiciary paper form 100-00257 (03/2025), as well as Small Claims Certificate of Service form 100-00260 (04/2024).
+    Small Claims Complaint for Vermont courts. Based on Vermont Judiciary paper form 100-00257 (03/2025), as well as Small Claims Certificate of Service form 100-00260 (04/2024).
   can_I_use_this_form: |
     If you live in Vermont and are seeking $10,000 or less, you can use this tool to start a small claims case.
   before_you_start: |
     This guided tool will produce an initial package of forms needed to start a small claims case in Vermont.
   maturity: production
-  estimated_completion_minutes: 15
+  estimated_completion_minutes: 20
   estimated_completion_delta: 5
   LIST_topics: 
     - "MO-10-00-00-00"
@@ -62,7 +62,7 @@ code: |
 ---
 objects:
   - users: ALPeopleList.using(ask_number=True,target_number=1)
-  - attorneys: ALPeopleList.using(ask_number=True,target_number=1,)
+  - attorneys: ALPeopleList.using(ask_number=True,target_number=1)
   - other_parties: ALPeopleList.using(object_type=ALIndividual, there_are_any=True, complete_attribute='complete')
 ---
 objects:
@@ -185,7 +185,7 @@ subquestion: |
 
   <i class="fas fa-envelope fa-2x"></i> The tool will also give you some blank forms that you will send to the person, business or organization in a later step in the small claims process. It will also produce a Small Claims Certificate of Service form for you to use. We will give you instructions at the end in the Next Steps document.
   
-  <i class="fas fa-clock fa-2x"></i> It may take you 30 minutes to complete this.
+  <i class="fas fa-clock fa-2x"></i> It may take you 20 minutes to complete this.
 
   <i class="fas fa-circle-info fa-2x"></i> It is free to use this program. This site is not a lawyer. Visit our [VTLawHelp.org website](https://vtlawhelp.org/) for legal information.
 
@@ -207,7 +207,7 @@ subquestion: |
   - make a list of each reason they owe you money or caused you to lose money. These are your “damages.”
   - come up with a total amount you want to sue for (You can include more than one dispute with the same defendant in your lawsuit, if the total amount you are asking for is $10,000 or less.)
   - be prepared to pay a court filing fee of $60 or $90, depending on the amount you are suing for
-  - or, be prepared to submit a fee waiver form to the court at the same time that you submit your small claims complaint. See the [Small Claims Roadmap](https://vtlawhelp.org/roadmap/small-claims/step-2) for details.
+  - or, be prepared to submit a fee waiver form to the court at the same time that you submit your Small Claims Complaint. See the [Small Claims Roadmap](https://vtlawhelp.org/roadmap/small-claims/step-2) for details.
 
   Ask for general help with court forms or the court process by contacting the [Vermont Judiciary Access and Resource Center](https://www.vermontjudiciary.org/self-help/ARC). Their services are free and they serve the whole state. They do NOT give legal advice.
 
@@ -227,7 +227,7 @@ id: important_notes_to_user
 question: |
   Important
 subquestion: |  
-  <i class="fa fa-exclamation-circle fa-2x"></i>  This tool does **not** file your small claims complaint form with the court. You will need to get it to the court yourself such as by email, mail or in person. We will give you instructions when you finish.
+  <i class="fa fa-exclamation-circle fa-2x"></i>  This tool does **not** file your Small Claims Complaint form with the court. You will need to get it to the court yourself such as by email, mail or in person. We will give you instructions when you finish.
     
     Let's get started. Tap the Next button.
 continue button field: important_notes_to_user
@@ -297,9 +297,9 @@ id: over six years screening
 question: |
   Are you suing for damages or a debt that is over six years old? 
 subquestion: |
-  If so, the statute of limitations has passed, and you can no longer collect the debt.
+  If so, the statute of limitations has passed, and you may not be able to collect the debt or damages.
 
-  For example, you cannot win a small claims case if:
+  As a lawyer for advice if:
   
   - the date the defendant was supposed to pay you is more than six years ago, or
   - the last date the defendant made a payment was more than six years ago, or
@@ -312,7 +312,7 @@ id: over six years screening kickout
 question: |
   Stop
 subquestion: |
-  Small claims court **cannot** help when a debt or damages were incurred more than six years ago. After six years, Vermont's statute of limitations has passed, and you can no longer collect the debt or damages. You can ask a lawyer for advice on your situation.
+  Small claims court **may not** help when a debt or damages were incurred more than six years ago. After six years, Vermont's statute of limitations has passed, and you may not be able to collect the debt or damages. Ask a lawyer for advice on your situation.
 continue button field: over_six_years_screening_kickout
 buttons:
   - DELETE your answers: restart
@@ -324,7 +324,7 @@ question: |
 subquestion: |
   The small claims court filing fee is $65 for claims of $1,000 or less. It is $90 for claims over $1,000. You can pay the court with cash, check or money order.
 
-  When you give your small claims complaint to the court, you need to either pay the filing fee or hand in a fee waiver form. If you have a low income, you could ask the court for a fee waiver. We will point you to the VTCourtForms Fee Waiver tool after you finish this small claims complaint.
+  When you give your Small Claims Complaint to the court, you need to either pay the filing fee or hand in a fee waiver form. If you have a low income, you could ask the court for a fee waiver. We will point you to the VTCourtForms Fee Waiver tool at the end of this tool.
 
     As part of your claim against the defendant, you can ask to be reimbursed for the court filing fee.
 fields:
@@ -337,7 +337,7 @@ question: |
 subquestion: |
   The small claims court filing fee is $65 for claims of $1,000 or less. It is $90 for claims over $1,000. You can pay the court with cash, check or money order.
 
-  When you give your small claims complaint to the court, you need to either pay the filing fee or hand in a fee waiver form. If you have a low income, you could ask the court for a fee waiver. We will point you to the VTCourtForms Fee Waiver tool after you finish this small claims complaint.
+  When you give your Small Claims Complaint to the court, you need to either pay the filing fee or hand in a fee waiver form. If you have a low income, you could ask the court for a fee waiver. We will point you to the VTCourtForms Fee Waiver tool at the end of this tool.
 
     In your complaint, you can ask the defendant to pay you back for the court filing fee.
   
@@ -450,7 +450,7 @@ sets:
 question: |
   Name of ${ ordinal(i) } defendant
 subquestion: |
-  The defendant is who you are suing. You may have more than one defendant. We will collect their information one at a time.
+  The defendant is the person or business you are suing. You may have more than one defendant. We will collect their information one at a time.
 fields:
   - code: |
       other_parties[i].name_fields(person_or_business='unsure')
@@ -530,7 +530,7 @@ id: claim interest
 question: |
   How much interest do you want to claim?
 subquestion: |
-  If a debt has gained interest, you can add a separate amount of interest on the small claims complaint form. You should be prepared to explain to the court the amount you enter here.
+  If a debt has gained interest, you can add a separate amount of interest on the Small Claims Complaint form. You should be prepared to explain to the court the amount you enter here.
   
   You can also enter $0.
   
@@ -560,7 +560,7 @@ fields:
       * If your claim is $1,000 or less the fee will be $65.
       * If your claim is more than $1,000 the fee will be $90.
 
-      When you give your small claims complaint to the court, you need to either pay the filing fee or hand in a fee waiver form. If you have a low income and want to apply for a fee waiver, we will point you to the VTCourtForms Fee Waiver tool when you are done here. 
+      When you give your Small Claims Complaint to the court, you need to either pay the filing fee or hand in a fee waiver form. If you have a low income and want to apply for a fee waiver, we will point you to the VTCourtForms Fee Waiver tool when you are done here. 
 ---
 ### Code to get court fee amount ####
 depends on: 
@@ -621,15 +621,14 @@ subquestion: |
   
   Examples include:
   
-  - contracts
+  - contract, invoice or receipt
+  - letter, email or texts
   - photos
-  - receipts
-  - letters, emails or texts
 
   With your complaint, you can include short documents related to the dispute. **Or you can wait until later in the process.** Whatever you include, you will need to send copies to the defendant later.
   
 fields:
-  - "Are you including supporting documents **now** with your small claims complaint?": documents_attached_to_complaint
+  - "Are you including supporting documents **now** with your Small Claims Complaint?": documents_attached_to_complaint
     datatype: yesnoradio
 ---
 ##################### REVIEW SCREEN #######################
@@ -768,7 +767,7 @@ review:
 
   - Edit: documents_attached_to_complaint
     button: |
-      **You are including supporting documents with your small claims complaint**: ${ word(yesno(documents_attached_to_complaint)) }
+      **You are including supporting documents with your Small Claims Complaint now**: ${ word(yesno(documents_attached_to_complaint)) }
 
       (This question is for the Certificate of Service form that this tool produces.)
 ---
@@ -799,6 +798,8 @@ columns:
       row_item.phone_number if defined("row_item.phone_number") else ""
   - Work or other phone: |
       row_item.work_phone_number if defined("row_item.work_phone_number") else ""
+  - Signature on form: |
+      row_item.signature if defined("row_item.signature") else ""
 edit:
   - name.first
   - birthdate
@@ -807,6 +808,7 @@ edit:
   - email
   - phone_number
   - work_phone_number
+  - signature
 confirm: True
 ---
 id: attorneys.revisit
@@ -863,10 +865,7 @@ edit:
 confirm: True
 ---
 code: |
-  if len(attorneys) > 0:
-    default_printed_signature = attorneys[0].name
-  else:
-    default_printed_signature = users[0].name
+  default_printed_signature = users[0].name
 ---
 id: signing your forms
 question: |
@@ -879,14 +878,10 @@ fields:
     required: False
 
   - note: |
-      You said you had a lawyer. Do you want to sign the form yourself? Or have your lawyer sign it, either now or later?
-    show if: len(attorneys) > 0
-
-  - "I'd rather sign it myself": user_wants_to_sign_form_themselves
-    datatype: yesno
-    show if: len(attorneys) > 0
+      If you said you have a lawyer, and you want them to sign the form, you can edit the name above.
+    show if: attorneys[0].name.first ! = ""
     
-  - "Date of the signature for the form": signature_date
+  - "Date of the signature for the Complaint form": signature_date
     datatype: date
     required: False
     default: |
@@ -962,7 +957,9 @@ subquestion: |
   <hr>
   
   <h4 style="margin-bottom: 18px;">Documents to download</h4>
-  <i class="fa fa-exclamation-circle fa-2x"></i>   Download all of these documents. Some you will give to the court **now**. You will hold on to the "blank" forms to share with the defendant **later**. See the Next Steps document for details.
+  <i class="fa fa-exclamation-circle fa-2x"></i>   Download **all** of these documents.
+  
+  You will give your Complaint form to the court **now**. You will hold on to your Certificate of Service form and the "blank" forms to share with the defendant **later**. See the Next Steps document for details.
   
   ${ al_user_bundle.download_list_html() }
 
@@ -986,19 +983,21 @@ objects:
       VT_small_claims_certificate_of_service_attachment, 
       VT_small_claims_information_and_instructions_for_defendant_attachment,
       VT_small_claims_answer_attachment,
-      VT_small_claims_disclosure_of_exempt_income_attachment], 
+      VT_small_claims_disclosure_of_exempt_income_attachment,
+      VT_blank_small_claims_certificate_of_service_attachment], 
       filename="VT_small_claims", title="Download all forms", enabled=True)
   - al_court_bundle: ALDocumentBundle.using(elements=[
       VT_small_claims_complaint_attachment], 
       filename="VT_small_claims", title="All forms to deliver to court", enabled=True)
 ---
 objects:
-  - VT_small_claims_complaint_attachment: ALDocument.using(title="Vermont small claims complaint", filename="small_claims_complaint_with_info_100_00257.pdf", enabled=True, has_addendum=True, default_overflow_message="[See addendum]")
-  - VT_small_claims_certificate_of_service_attachment: ALDocument.using(title="Vermont small claims certificate of service", filename="small_claims_certificate_of_service_100_00260.pdf", enabled=True, has_addendum=False)
-  - VT_small_claims_information_and_instructions_for_defendant_attachment: ALDocument.using(title="BLANK Vermont small claims information and instructions for defendant form 100-00259", filename="Small_Claims_Information_and_Instructions_for_Defendant_100_00259.pdf", enabled=True, has_addendum=False)
-  - VT_small_claims_disclosure_of_exempt_income_attachment: ALDocument.using(title="BLANK Vermont small claims disclosure of exempt income form 100-00128", filename="Disclosure_of_Exempt_Income_100_00128.pdf", enabled=True, has_addendum=False)
-  - VT_small_claims_answer_attachment: ALDocument.using(title="BLANK Vermont small claims answer form 100-00126", filename="100-00126_Small_Claims_Answer.pdf", enabled=True, has_addendum=False)
-  - VT_small_claims_complaint_Post_interview_instructions: ALDocument.using(title="NEXT STEPS - Instructions for filing these forms with the court", filename="small_claims_complaint_next_steps.docx", enabled=True, has_addendum=False)
+  - VT_small_claims_complaint_attachment: ALDocument.using(title="Your Small Claims Complaint", filename="small_claims_complaint_with_info_100_00257.pdf", enabled=True, has_addendum=True, default_overflow_message="[See addendum]")
+  - VT_small_claims_certificate_of_service_attachment: ALDocument.using(title="Your Certificate of Service", filename="small_claims_certificate_of_service_100_00260.pdf", enabled=True, has_addendum=False)
+  - VT_small_claims_information_and_instructions_for_defendant_attachment: ALDocument.using(title="BLANK Small claims information and instructions form 100-00259 for defendant", filename="Small_Claims_Information_and_Instructions_for_Defendant_100_00259.pdf", enabled=True, has_addendum=False)
+  - VT_small_claims_disclosure_of_exempt_income_attachment: ALDocument.using(title="BLANK Disclosure of exempt income form 100-00128 for defendant", filename="Disclosure_of_Exempt_Income_100_00128.pdf", enabled=True, has_addendum=False)
+  - VT_small_claims_answer_attachment: ALDocument.using(title="BLANK Answer form 100-00126 for defendant", filename="100-00126_Small_Claims_Answer.pdf", enabled=True, has_addendum=False)
+  - VT_blank_small_claims_certificate_of_service_attachment: ALDocument.using(title="BLANK Certificate of Service for defendant", filename="100-00260_Certificate_of_Service_-_Small_Claims_0.pdf", enabled=True, has_addendum=False)
+  - VT_small_claims_complaint_Post_interview_instructions: ALDocument.using(title="NEXT STEPS - Instructions for filing your forms with the court", filename="small_claims_complaint_next_steps.docx", enabled=True, has_addendum=False)
 ---
 attachment:
   variable name: VT_small_claims_complaint_attachment.addendum
@@ -1078,30 +1077,30 @@ attachments:
     skip undefined: True
     pdf template file: small_claims_certificate_of_service_100_00260.pdf
     fields:
-      - "trial_court_county": ${ user_selected_county }
-      - "users1_name": ${ users[0] }
-      - "users1_name_full": ${ attorneys[0] if user_has_attorney else users[0] }
-      - "users1_name_1": ${ attorneys[0] if user_has_attorney else users[0] }
-      - "users1_address_mailing_line_one": |
-          % if defined("users[0].mailing_address.address"):
-          ${ attorneys[0].address.line_one() if user_has_attorney else users[0].mailing_address.line_one() }
-          % else:
-          ${ attorneys[0].address.line_one() if user_has_attorney else users[0].address.line_one() }
-          % endif
-      - "users1_address_mailing_line_two":  |
-          % if defined("users[0].mailing_address.address"):
-          ${ attorneys[0].address.line_two() if user_has_attorney else users[0].mailing_address.line_two() }
-          % else:
-          ${ attorneys[0].address.line_two() if user_has_attorney else users[0].address.line_two() }
-          % endif
-      - "users1_phone_number": ${ phone_number_formatted(attorneys[0].daytime_phone_number) if user_has_attorney else phone_number_formatted(users[0].phone_number) }
-      - "users1_email": ${ attorneys[0].email if user_has_attorney else users[0].email }
-      - "other_parties1_name": ${ other_parties.short_list(2) }
+      - "COS_trial_court_county": ${ user_selected_county }
+      - "COS_plaintiff": ${ users[0] }
+      - "COS_defendant": ${ other_parties.short_list(2) }
+      - "COS_name_full": ${ attorneys[0] if user_has_attorney else users[0] }
       - "mailed_summons": Yes
       - "mailed_complaint": Yes
       - "mailed_info_and_instructions_for_defendant": Yes
       - "mailed_blank_answer_form": Yes
       - "mailed_documents_attached_to_complaint": ${ documents_attached_to_complaint }
+      - "COS_signer_name": ${ printed_signature }
+      - "COS_mailing_address_line_one": |
+          % if defined("users[0].mailing_address.address"):
+          ${ attorneys[0].address.line_one() if user_has_attorney else users[0].mailing_address.line_one() }
+          % else:
+          ${ attorneys[0].address.line_one() if user_has_attorney else users[0].address.line_one() }
+          % endif
+      - "COS_mailing_address_line_two":  |
+          % if defined("users[0].mailing_address.address"):
+          ${ attorneys[0].address.line_two() if user_has_attorney else users[0].mailing_address.line_two() }
+          % else:
+          ${ attorneys[0].address.line_two() if user_has_attorney else users[0].address.line_two() }
+          % endif
+      - "COS_phone_number": ${ phone_number_formatted(attorneys[0].daytime_phone_number) if user_has_attorney else phone_number_formatted(users[0].phone_number) }
+      - "COS_email": ${ attorneys[0].email if user_has_attorney else users[0].email }
 ---
 attachment:
   variable name: VT_small_claims_information_and_instructions_for_defendant_attachment[i]
@@ -1118,6 +1117,12 @@ attachment:
 attachment:
   variable name: VT_small_claims_disclosure_of_exempt_income_attachment[i]
   pdf template file: Disclosure_of_Exempt_Income_100_00128.pdf
+  fields:
+    - "fake_field": ''
+---
+attachment:
+  variable name: VT_blank_small_claims_certificate_of_service_attachment[i]
+  pdf template file: 100-00260_Certificate_of_Service_-_Small_Claims_0.pdf
   fields:
     - "fake_field": ''
 ---
