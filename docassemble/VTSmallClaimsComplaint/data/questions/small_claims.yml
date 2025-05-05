@@ -626,10 +626,10 @@ subquestion: |
   - receipts
   - letters, emails or texts
 
-  If you include copies of supporting documents with your small claims complaint, later you will need to send copies to the defendant, too.
+  With your complaint, you can include short documents related to the dispute. **Or you can wait until later in the process.** Whatever you include, you will need to send copies to the defendant later.
   
 fields:
-  - "Are you including supporting documents in your small claims complaint?": documents_attached_to_complaint
+  - "Are you including supporting documents **now** with your small claims complaint?": documents_attached_to_complaint
     datatype: yesnoradio
 ---
 ##################### REVIEW SCREEN #######################
