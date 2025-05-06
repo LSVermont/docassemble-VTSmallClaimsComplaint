@@ -630,6 +630,9 @@ subquestion: |
 fields:
   - "Are you including supporting documents **now** with your Small Claims Complaint?": documents_attached_to_complaint
     datatype: yesnoradio
+
+  - note: |
+      ${ after_last_question_we_will_generate_your_forms }
 ---
 ##################### REVIEW SCREEN #######################
 ---
@@ -779,6 +782,9 @@ review:
       **You are including supporting documents with your Small Claims Complaint now**: ${ word(yesno(documents_attached_to_complaint)) }
 
       (This question is for the Certificate of Service form that this tool produces.)
+
+  - note: |
+      ${ review_screen_select_resume_will_take_moment }
 ---
 id: users.revisit
 continue button field: users.revisit
