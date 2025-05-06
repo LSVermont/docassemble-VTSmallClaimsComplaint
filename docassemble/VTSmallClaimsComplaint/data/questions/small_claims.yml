@@ -968,7 +968,7 @@ subquestion: |
   <h4 style="margin-bottom: 18px;">Documents to download</h4>
   <i class="fa fa-exclamation-circle fa-2x"></i>   Download **all** of these documents.
   
-  You will give your Complaint form to the court **now**. You will hold on to your Certificate of Service form and the "blank" forms to share with the defendant **later**. See the Next Steps document for details.
+  You will need to mail or deliver your Complaint form to the court to start the process. But you will hold on to your Certificate of Service form and the "blank" forms for **later** in the process. See the Next Steps document for details.
   
   ${ al_user_bundle.download_list_html() }
 
