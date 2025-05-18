@@ -23,8 +23,8 @@ metadata:
   tags:
     - "MO-10-00-00-00"
   authors:
-    - Kelly McGuire, Lemma Legal
     - Kris Surette, Legal Services Vermont
+    - Kelly McGuire, Lemma Legal
   original_form:
     - https://www.vermontjudiciary.org/media/38
   original_form_published_on: March 2025
@@ -840,7 +840,6 @@ review:
       **You are including supporting documents with your Small Claims Complaint now**: ${ word(yesno(documents_attached_to_complaint)) }
 
       (This question is for the Certificate of Service form that this tool produces.)
-
   - note: |
       ${ review_screen_select_resume_will_take_moment }
 ---
