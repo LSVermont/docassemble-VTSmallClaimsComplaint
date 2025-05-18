@@ -686,7 +686,7 @@ subquestion: |
   With your complaint, you can include short documents related to the dispute. **Or you can wait until later in the process.** Whatever you include, you will need to send copies to the defendant later.
   
 fields:
-  - "Are you including supporting documents **now** with your Small Claims Complaint?": documents_attached_to_complaint
+  - "Are you going to give the court supporting documents with your Small Claims Complaint?": documents_attached_to_complaint
     datatype: yesnoradio
 
   - note: |
