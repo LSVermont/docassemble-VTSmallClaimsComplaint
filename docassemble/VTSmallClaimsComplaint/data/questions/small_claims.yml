@@ -39,7 +39,7 @@ metadata:
   languages:
     - en
   jurisdiction: NAM-US-US+VT
-  review_date: 2025-02-19
+  review_date: 2025-05-08
   form_titles:
     - Small Claims
   form_numbers:
@@ -71,14 +71,72 @@ objects:
 code: |
   trial_court_index = all_courts.matching_courts_in_county(county_name=user_selected_county,search_columns=['division_abbr'],search_string=trial_court_division)[0][0]
 ---
+---
+############Code below to allow Edit my answers to be clicked in Menu or in side nav#########
+---
+reconsider: True
+code: |
+  al_menu_items_tmp = [
+    {"url": url_ask(['al_start_over_confirmation','al_start_over']),
+    "label": "Start over"
+    },
+    {
+      "url": url_ask(['al_exit_logout_confirmation', 'al_exit_logout']),
+      "label": "Exit and delete my answers"
+    },
+  ]
+  if al_enable_incomplete_downloads:
+    al_menu_items_tmp.append({
+        "url": url_action('al_error_action_download_screen'), 
+        "label": "Download current progress"
+    })
+  
+  # Answer set feature is behind a server-wide configuration option
+  if get_config('assembly line',{}).get('enable answer sets'):
+    al_menu_items_tmp.extend([
+    {"url": url_ask(["al_sessions_snapshot_label", {"recompute": ["al_sessions_save_session_snapshot"]}, "al_sessions_save_status"]),
+    "label": "Save answer set"
+    },
+    action_menu_item("Load answer set", "al_load_saved_session"),
+  ]
+  )
+  
+  if get_config('assembly line',{}).get('enable answer set imports'):
+    al_menu_items_tmp.append(
+      {"url": url_ask(["al_sessions_json_file", {"recompute": ["al_sessions_import_json"]}, "al_sessions_load_status"]),
+      "label": "Import answer set"
+      }
+    )
+  al_menu_items_tmp.append(
+    {
+      "url": url_action('edit_answers_screen'),
+      "label": "Edit my answers"
+      
+    }
+  )
+    
+  al_menu_items = al_menu_items_tmp
+  del al_menu_items_tmp
+---
+event: edit_answers_screen
+id: edit answers screen
+question: |
+  Edit your answers
+subquestion: |
+  ${ action_button_html(url_action('review_small_claims'), label='<i class="fa-solid fa-pencil"></i> Edit your answers', color='info') }
+  
+  Remember to come back to this screen to continue.
+continue button field: small_claims_complaint_preview_question
+---
 sections:
   - intro: Is this tool right for you?
   - about_you: About you
   - other_party: The other party
   - case_info: Your claim
-  - review_small_claims_complaint: Edit your answers
+  - review_small_claims: <i class="fa-solid fa-pencil"></i> <u>Edit your answers</u>
   - sign: Sign your documents
   - get_docs: Download your documents
+progressive: False
 ---
 #################### Interview order #####################
 comment: |
@@ -299,7 +357,7 @@ question: |
 subquestion: |
   If so, the statute of limitations has passed, and you may not be able to collect the debt or damages.
 
-  As a lawyer for advice if:
+  Ask a lawyer for advice if:
   
   - the date the defendant was supposed to pay you is more than six years ago, or
   - the last date the defendant made a payment was more than six years ago, or
@@ -1077,10 +1135,10 @@ attachments:
           ""
           % endif
           % endif
-      - "claim_amount_principal": ${ thousands(claim_principal,show_decimals=True) }
-      - "claim_amount_interest": ${ thousands(claim_interest,show_decimals=True) }
-      - "claim_amount_court_costs": ${ thousands(claim_court_fee if wants_to_claim_court_fee else 0,show_decimals=True) }
-      - "claim_amount_total": ${ thousands((claim_principal + claim_interest + (claim_court_fee if wants_to_claim_court_fee else 0)),show_decimals=True) }
+      - "claim_amount_principal": ${ "{:.2f}".format(claim_principal) }
+      - "claim_amount_interest": ${ "{:.2f}".format(claim_interest) }
+      - "claim_amount_court_costs": ${ "{:.2f}".format(claim_court_fee if wants_to_claim_court_fee else 0) }
+      - "claim_amount_total": ${ "{:.2f}".format((claim_principal + claim_interest + (claim_court_fee if wants_to_claim_court_fee else 0))) }
       - "complaint_description": ${ complaint_description }
       - "signature_date": ${ signature_date }
       - "users1_name_1": ${ printed_signature }
