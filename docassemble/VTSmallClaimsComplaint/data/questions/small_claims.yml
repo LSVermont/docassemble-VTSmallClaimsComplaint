@@ -264,7 +264,7 @@ subquestion: |
   - know the name and address of the person, business or organization that you want to sue for $10,000 or less
   - make a list of each reason they owe you money or caused you to lose money. These are your “damages.”
   - come up with a total amount you want to sue for (You can include more than one dispute with the same defendant in your lawsuit, if the total amount you are asking for is $10,000 or less.)
-  - be prepared to pay a court filing fee of $60 or $90, depending on the amount you are suing for
+  - be prepared to pay a court filing fee of $65 or $90, depending on the amount you are suing for
   - or, be prepared to submit a fee waiver form to the court at the same time that you submit your Small Claims Complaint. See the [Small Claims Roadmap](https://vtlawhelp.org/roadmap/small-claims/step-2) for details.
 
   Ask for general help with court forms or the court process by contacting the [Vermont Judiciary Access and Resource Center](https://www.vermontjudiciary.org/self-help/ARC). Their services are free and they serve the whole state. They do NOT give legal advice.
@@ -345,7 +345,7 @@ id: non money screening kickout
 question: |
   Stop
 subquestion: |
-  Small claims court **cannot** help if you are asking the court to order someone to do something or stop doing something. That kind of order is called an “injunction.” You cannot use small claims court for an injunction.
+  You can only sue for money in small claims cases. That means you can't ask the judge to order the person you are suing to return property to you or let you have your job back, or do anything other than pay you.
 continue button field: non_money_screening_kickout
 buttons:
   - DELETE your answers: restart
@@ -380,7 +380,7 @@ id: fee screening
 question: |
   Are you aware of the court filing fee?
 subquestion: |
-  The small claims court filing fee is $65 for claims of $1,000 or less. It is $90 for claims over $1,000. You can pay the court with cash, check or money order.
+  The small claims court filing fee is $65 for claims of $1,000 or less. It is $90 for claims over $1,000. You can pay the court with cash, check, credit card or money order.
 
   When you give your Small Claims Complaint to the court, you need to either pay the filing fee or hand in a fee waiver form. If you have a low income, you could ask the court for a fee waiver. We will point you to the VTCourtForms Fee Waiver tool at the end of this tool.
 
@@ -564,7 +564,7 @@ subquestion: |
 
   - The "principal" (your damages)
   - Any interest you want to claim on that amount
-  - Your court filing fee, if you want to get that amount back from the other party ($65 for claims of $1,000 or less, or $90 for more than $1,000)
+  - Your court filing fee, if you want to get that amount back from the other party ($65 for claims of $1,000 or less, or $90 for more than $1,000). Note: The filing fee does **not** count toward the $10,000 maximum.
 
   **Let's start with the principal (your damages).**
   
@@ -593,6 +593,8 @@ subquestion: |
   You can also enter $0.
   
   If you are not sure whether interest has accumulated on this debt, you can contact a lawyer for advice.
+
+  Interest is part of the $10,000 maximum.
 fields:
   - "Interest you want to claim": claim_interest
     datatype: currency
