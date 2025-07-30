@@ -560,11 +560,13 @@ id: claim principal
 question: |
   How much are you suing for?
 subquestion: |
-  The total amount of your "claim" in small claims courts cannot be more than $10,000. There are three things that make up your total:
+  There are three things that can make up your claim in small claims court:
 
-  - The "principal" (your damages)
-  - Any interest you want to claim on that amount
-  - Your court filing fee, if you want to get that amount back from the other party ($65 for claims of $1,000 or less, or $90 for more than $1,000). Note: The filing fee does **not** count toward the $10,000 maximum.
+  - The "principal" (your damages) that you want to get.
+  - Any interest you want to claim on that amount.
+  - Your court filing fee, if you want to get that amount back from the other party ($65 for claims of $1,000 or less, or $90 for more than $1,000). 
+
+  The total amount of the principal and interest cannot be more than $10,000. However, the filing fee does **not** count toward the $10,000 maximum.
 
   **Let's start with the principal (your damages).**
   
@@ -594,14 +596,13 @@ subquestion: |
   
   If you are not sure whether interest has accumulated on this debt, you can contact a lawyer for advice.
 
-  Interest is part of the $10,000 maximum.
 fields:
   - "Interest you want to claim": claim_interest
     datatype: currency
     max: ${ round(max_interest, 2) }
     validation messages:
       max: |
-        The combined total of your claim and interest cannot be more than $10,000.00. Based on the amount of your claim, the maximum interest you can ask for is ${ currency(max_interest) }.
+        The total amount of the principal and interest cannot be more than $10,000. Based on the amount of your principal, the maximum interest you can ask for is ${ currency(max_interest) }.
     required: False
 ---
 id: claim court costs
@@ -648,10 +649,10 @@ subquestion: |
   - Court filing fee: $0
   % endif
 
-  % if (claim_principal + claim_interest + (claim_court_fee if wants_to_claim_court_fee else 0)) > 10000:
+  % if (claim_principal + claim_interest) > 10000:
     <i class="fas fa-hand-paper fa-3x" aria-hidden="true"></i>  **STOP!**
   
-  **You have gone over the $10,000 limit for small claims court by ${ currency(claim_principal + claim_interest + claim_court_fee - 10000) }**. 
+  **You have gone over the $10,000 limit for small claims court by ${ currency(claim_principal + claim_interest - 10000) }**. 
   
     If you want to use small claims court, **go back and edit** one of your amounts.
   % else:
@@ -812,10 +813,10 @@ review:
       **You want to add that court fee to your claim**:
       ${ word(yesno(wants_to_claim_court_fee)) }
   - note: |
-      % if (claim_principal + claim_interest + (claim_court_fee if wants_to_claim_court_fee else 0)) > 10000:
+      % if (claim_principal + claim_interest) > 10000:
       <i class="fas fa-hand-paper fa-3x" aria-hidden="true"></i>  **STOP!**
   
-      **You have gone over the $10,000 limit for small claims court by ${ currency(claim_principal + claim_interest + claim_court_fee - 10000) }**. 
+      **You have gone over the $10,000 limit for small claims court by ${ currency(claim_principal + claim_interest - 10000) }**. Remember, the principal and interest cannot be more than $10,000. The filing fee does not count as part of the $10,000 maximum.
   
       If you want to use small claims court, click **Edit** on the amounts.
       % else:
@@ -1130,11 +1131,7 @@ attachments:
       - "other_parties1_address_line_two": ${ other_parties[0].address.line_two() }
       - "other_parties1_birthdate": |
           % if other_parties[0].person_type == "ALIndividual":
-          % if defined("other_parties[0].birthdate"):
-          ${ format_date(other_parties[0].birthdate, format='M/d/yyyy') }
-          % else:
-          ""
-          % endif
+          ${ format_date_if_defined("other_parties[0].birthdate", format="M/d/yyyy") }
           % endif
       - "claim_amount_principal": ${ "{:.2f}".format(claim_principal) }
       - "claim_amount_interest": ${ "{:.2f}".format(claim_interest) }
