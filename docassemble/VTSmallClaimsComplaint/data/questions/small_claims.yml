@@ -264,7 +264,7 @@ subquestion: |
   - know the name and address of the person, business or organization that you want to sue for $10,000 or less
   - make a list of each reason they owe you money or caused you to lose money. These are your “damages.”
   - come up with a total amount you want to sue for (You can include more than one dispute with the same defendant in your lawsuit, if the total amount you are asking for is $10,000 or less.)
-  - be prepared to pay a court filing fee of $60 or $90, depending on the amount you are suing for
+  - be prepared to pay a court filing fee of $65 or $90, depending on the amount you are suing for
   - or, be prepared to submit a fee waiver form to the court at the same time that you submit your Small Claims Complaint. See the [Small Claims Roadmap](https://vtlawhelp.org/roadmap/small-claims/step-2) for details.
 
   Ask for general help with court forms or the court process by contacting the [Vermont Judiciary Access and Resource Center](https://www.vermontjudiciary.org/self-help/ARC). Their services are free and they serve the whole state. They do NOT give legal advice.
@@ -345,7 +345,7 @@ id: non money screening kickout
 question: |
   Stop
 subquestion: |
-  Small claims court **cannot** help if you are asking the court to order someone to do something or stop doing something. That kind of order is called an “injunction.” You cannot use small claims court for an injunction.
+  You can only sue for money in small claims cases. That means you can't ask the judge to order the person you are suing to return property to you or let you have your job back, or do anything other than pay you.
 continue button field: non_money_screening_kickout
 buttons:
   - DELETE your answers: restart
@@ -380,7 +380,7 @@ id: fee screening
 question: |
   Are you aware of the court filing fee?
 subquestion: |
-  The small claims court filing fee is $65 for claims of $1,000 or less. It is $90 for claims over $1,000. You can pay the court with cash, check or money order.
+  The small claims court filing fee is $65 for claims of $1,000 or less. It is $90 for claims over $1,000. You can pay the court with cash, check, credit card or money order.
 
   When you give your Small Claims Complaint to the court, you need to either pay the filing fee or hand in a fee waiver form. If you have a low income, you could ask the court for a fee waiver. We will point you to the VTCourtForms Fee Waiver tool at the end of this tool.
 
@@ -560,11 +560,13 @@ id: claim principal
 question: |
   How much are you suing for?
 subquestion: |
-  The total amount of your "claim" in small claims courts cannot be more than $10,000. There are three things that make up your total:
+  There are three things that can make up your claim in small claims court:
 
-  - The "principal" (your damages)
-  - Any interest you want to claim on that amount
-  - Your court filing fee, if you want to get that amount back from the other party ($65 for claims of $1,000 or less, or $90 for more than $1,000)
+  - The "principal" (your damages) that you want to get.
+  - Any interest you want to claim on that amount.
+  - Your court filing fee --- if you want to get that amount back from the other party ($65 for claims of $1,000 or less, or $90 for more than $1,000). 
+
+  The total amount of the principal and interest cannot be more than $10,000. However, the filing fee does **not** count toward the $10,000 maximum.
 
   **Let's start with the principal (your damages).**
   
@@ -593,13 +595,14 @@ subquestion: |
   You can also enter $0.
   
   If you are not sure whether interest has accumulated on this debt, you can contact a lawyer for advice.
+
 fields:
   - "Interest you want to claim": claim_interest
     datatype: currency
     max: ${ round(max_interest, 2) }
     validation messages:
       max: |
-        The combined total of your claim and interest cannot be more than $10,000.00. Based on the amount of your claim, the maximum interest you can ask for is ${ currency(max_interest) }.
+        The total amount of the principal and interest cannot be more than $10,000. Based on the amount of your principal, the maximum interest you can ask for is ${ currency(max_interest) }.
     required: False
 ---
 id: claim court costs
@@ -646,10 +649,10 @@ subquestion: |
   - Court filing fee: $0
   % endif
 
-  % if (claim_principal + claim_interest + (claim_court_fee if wants_to_claim_court_fee else 0)) > 10000:
+  % if (claim_principal + claim_interest) > 10000:
     <i class="fas fa-hand-paper fa-3x" aria-hidden="true"></i>  **STOP!**
   
-  **You have gone over the $10,000 limit for small claims court by ${ currency(claim_principal + claim_interest + claim_court_fee - 10000) }**. 
+  **You have gone over the $10,000 limit for small claims court by ${ currency(claim_principal + claim_interest - 10000) }**. 
   
     If you want to use small claims court, **go back and edit** one of your amounts.
   % else:
@@ -810,10 +813,10 @@ review:
       **You want to add that court fee to your claim**:
       ${ word(yesno(wants_to_claim_court_fee)) }
   - note: |
-      % if (claim_principal + claim_interest + (claim_court_fee if wants_to_claim_court_fee else 0)) > 10000:
+      % if (claim_principal + claim_interest) > 10000:
       <i class="fas fa-hand-paper fa-3x" aria-hidden="true"></i>  **STOP!**
   
-      **You have gone over the $10,000 limit for small claims court by ${ currency(claim_principal + claim_interest + claim_court_fee - 10000) }**. 
+      **You have gone over the $10,000 limit for small claims court by ${ currency(claim_principal + claim_interest - 10000) }**. Remember, the principal and interest cannot be more than $10,000. The filing fee does not count as part of the $10,000 maximum.
   
       If you want to use small claims court, click **Edit** on the amounts.
       % else:
@@ -1128,11 +1131,7 @@ attachments:
       - "other_parties1_address_line_two": ${ other_parties[0].address.line_two() }
       - "other_parties1_birthdate": |
           % if other_parties[0].person_type == "ALIndividual":
-          % if defined("other_parties[0].birthdate"):
-          ${ format_date(other_parties[0].birthdate, format='M/d/yyyy') }
-          % else:
-          ""
-          % endif
+          ${ format_date_if_defined("other_parties[0].birthdate", format="M/d/yyyy") }
           % endif
       - "claim_amount_principal": ${ "{:.2f}".format(claim_principal) }
       - "claim_amount_interest": ${ "{:.2f}".format(claim_interest) }
