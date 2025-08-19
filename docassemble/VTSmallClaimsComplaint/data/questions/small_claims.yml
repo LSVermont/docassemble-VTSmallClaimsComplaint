@@ -672,7 +672,7 @@ subquestion: |
 fields:
   - "Why are you suing ${ other_parties } for ${ currency((claim_principal + claim_interest + (claim_court_fee if wants_to_claim_court_fee else 0))) }?": complaint_description
     input type: area
-    maxlength: 1130
+    maxlength: 1065
 ---
 id: documents attached to complaint
 question: |
@@ -1004,9 +1004,13 @@ question: |
   Preview your form before you sign it
 subquestion: |
   
-  Here is a preview of the form you will sign on the next screen. You will notice that the Judiciary includes two pages of instructions with the Small Claims Complaint form.
+  Here is a preview of the form you will sign on the next screen.
   
-  ${ al_court_bundle.as_pdf(key='preview') }
+  % if len(other_parties) > 1:
+  ${ al_court_bundle.as_pdf(key='preview').extract_pages(first=3, last=4) }
+  % else:
+  ${ al_court_bundle.as_pdf(key='preview').extract_pages(first=3) }
+  % endif
 
   Click the image to view it in a new tab. **Remember to come back to this screen to edit the form and/or finish the form.**
   
@@ -1112,6 +1116,7 @@ attachments:
     variable name: VT_small_claims_complaint_attachment[i]        
     skip undefined: True
     pdf template file: small_claims_complaint_with_info_100_00257.pdf
+    pdftk: True
     fields:
       - "trial_court_county": ${ user_selected_county }
       - "users1_name": ${ users[0] }
