@@ -285,7 +285,7 @@ id: important_notes_to_user
 question: |
   Important
 subquestion: |  
-  <i class="fa fa-exclamation-circle fa-2x"></i>  This tool does **not** file your Small Claims Complaint form with the court. You will need to get it to the court yourself such as by email, mail or in person. We will give you instructions when you finish.
+  <i class="fa fa-exclamation-circle fa-2x"></i>  This tool does **not** file your Small Claims Complaint form with the court. **You will need to get it to the court yourself** such as by email, mail or in person. We will give you instructions when you finish.
     
     Let's get started. Tap the Next button.
 continue button field: important_notes_to_user
@@ -388,6 +388,7 @@ subquestion: |
 fields:
   - I understand: fee_screening
     datatype: yesno
+    required: True
 ---
 id: fee screening kickout
 question: |
@@ -609,11 +610,11 @@ id: claim court costs
 question: |
   Court fee
 subquestion: |
-  Most people include the court filing fee in the amount they want to get from the defendant.
+  As part of your claim against the defendant, you can ask to be reimbursed for your court filing fee.
   
   In your case, your court filing fee is **${ currency(claim_court_fee)  }**.
 fields:  
-  - Do you want to add it to the amount you want to get from the defendant?: wants_to_claim_court_fee
+  - Do you want to add ${ currency(claim_court_fee) } to the amount you want to get from the defendant?: wants_to_claim_court_fee
     datatype: yesnoradio
   - note: |
       A reminder:
@@ -682,7 +683,8 @@ subquestion: |
   
   Examples include:
   
-  - contract, invoice or receipt
+  - lease or contract
+  - invoice or receipt
   - letter, email or texts
   - photos
 
@@ -843,8 +845,10 @@ review:
       **You are including supporting documents with your Small Claims Complaint now**: ${ word(yesno(documents_attached_to_complaint)) }
 
       (This question is for the Certificate of Service form that this tool produces.)
+      
   - note: |
-      ${ review_screen_select_resume_will_take_moment }
+      **Select Resume, below, when you are done. It will take a moment to generate your form again.**
+
 ---
 id: users.revisit
 continue button field: users.revisit
@@ -873,8 +877,6 @@ columns:
       row_item.phone_number if defined("row_item.phone_number") else ""
   - Work or other phone: |
       row_item.work_phone_number if defined("row_item.work_phone_number") else ""
-  - Signature on form: |
-      row_item.signature if defined("row_item.signature") else ""
 edit:
   - name.first
   - birthdate
@@ -883,7 +885,6 @@ edit:
   - email
   - phone_number
   - work_phone_number
-  - signature
 confirm: True
 ---
 id: attorneys.revisit
