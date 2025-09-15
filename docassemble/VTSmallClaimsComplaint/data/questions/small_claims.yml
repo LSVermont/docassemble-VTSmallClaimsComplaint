@@ -516,6 +516,8 @@ subquestion: |
 fields:
   - code: |
       other_parties[i].name_fields(person_or_business='unsure')
+  - note: |
+      Note: You can sue more than one person or organization if they are involved in the exact same matter. However, get advice from a lawyer to learn how much each would have to pay.
 ---
 id: birthdate question
 question: |
@@ -596,7 +598,7 @@ subquestion: |
 
   Special types of damages you should know about:
 
-  - Are you suing a former landlord over a security deposit? You can ask for double the total amount of the deposit if your landlord kept the deposit without a written reason, or if they waited more than 14 days to get your deposit back to you. See the [Security Deposit Roadmap on VTLawHelp.org](https://vtlawhelp.org/roadmap/security-deposit/step-5) for more information.
+  - Are you suing a former landlord over a security deposit? You can ask for double the total amount of the deposit if your landlord **willfully** kept the deposit without a written reason, or if they waited more than 14 days to get your deposit back to you. See the [Security Deposit Roadmap on VTLawHelp.org](https://vtlawhelp.org/roadmap/security-deposit/step-5) for more information.
   
   - Are you a customer suing a business over a product or service that they sold you? You may be entitled to triple the amount you spent on the product or service, if the business lied to you about the product or service. [Read the law.](https://legislature.vermont.gov/statutes/section/09/063/02461)
 fields:
