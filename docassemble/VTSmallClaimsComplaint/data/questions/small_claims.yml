@@ -382,9 +382,11 @@ question: |
 subquestion: |
   The small claims court filing fee is $65 for claims of $1,000 or less. It is $90 for claims over $1,000. You can pay the court with cash, check, credit card or money order.
 
-  When you give your Small Claims Complaint to the court, you need to either pay the filing fee or hand in a fee waiver form. If you have a low income, you could ask the court for a fee waiver. We will point you to the VTCourtForms Fee Waiver tool at the end of this tool.
+  In your complaint, you can ask the defendant to pay you back for the court filing fee.
 
-    As part of your claim against the defendant, you can ask to be reimbursed for the court filing fee.
+  If you have a low income, you could ask the court for a fee waiver. We will point you to the VTCourtForms Fee Waiver tool at the end of this tool.
+
+  When you give your Small Claims Complaint to the court, you need to either pay the filing fee or hand in a fee waiver form.
 fields:
   - I understand: fee_screening
     datatype: yesno
@@ -392,22 +394,6 @@ fields:
     validation messages:
       required: |
         Click the checkbox to continue.
----
-id: fee screening kickout
-question: |
-  Filing fee for small claims court
-subquestion: |
-  The small claims court filing fee is $65 for claims of $1,000 or less. It is $90 for claims over $1,000. You can pay the court with cash, check or money order.
-
-  When you give your Small Claims Complaint to the court, you need to either pay the filing fee or hand in a fee waiver form. If you have a low income, you could ask the court for a fee waiver. We will point you to the VTCourtForms Fee Waiver tool at the end of this tool.
-
-    In your complaint, you can ask the defendant to pay you back for the court filing fee.
-  
-  Do you want to continue?
-continue button field: fee_screening_kickout
-buttons:
-  - DELETE your answers: restart
-  - CONTINUE: continue
 ---
 ############################### USER INFO ###############################
 ---
@@ -694,7 +680,7 @@ question: |
 subquestion: |
   Describe why you are suing ${ other_parties }. Be specific about the reasons you are claiming a total of ${ currency((claim_principal + claim_interest + (claim_court_fee if wants_to_claim_court_fee else 0))) }.
 fields:
-  - "Why are you suing ${ other_parties } for ${ currency((claim_principal + claim_interest + (claim_court_fee if wants_to_claim_court_fee else 0))) }?": complaint_description
+  - "Why are you suing ${ other_parties }?": complaint_description
     input type: area
     maxlength: 1065
 ---
@@ -813,6 +799,7 @@ review:
       
       ${ item.mailing_address }
       % endif
+      
       % endfor
   - note: |
       ###Your claim  
@@ -1115,7 +1102,7 @@ code: |
   VT_small_claims_complaint_attachment.overflow_fields['other_parties'].headers = [
     {"name": "Name"},
     {"birthdate": "Birthdate"},
-    {"address": "Address"},
+    {"mailing_address": "Address"},
   ]
   VT_small_claims_complaint_attachment.overflow_fields.gathered = True  
 ---
@@ -1159,8 +1146,18 @@ attachments:
       - "users1_attorneys_address_line_two": ${ attorneys[0].address.line_two() }
       - "other_parties1_name": ${ other_parties.short_list(1) if other_parties.number_gathered() > 1 else other_parties[0]}
       - "other_parties1_name1": ${ other_parties[0] }
-      - "other_parties1_address_line_one": ${ other_parties[0].address.line_one() }
-      - "other_parties1_address_line_two": ${ other_parties[0].address.line_two() }
+      - "other_parties1_address_line_one": |
+          % if defined("other_parties[0].mailing_address.address"):
+          ${ other_parties[0].mailing_address.line_one() }
+          % else:
+          ${ other_parties[0].address.line_one() }
+          % endif
+      - "other_parties1_address_line_two": |
+          % if defined("other_parties[0].mailing_address.address"):
+          ${ other_parties[0].mailing_address.line_two() }
+          % else:
+          ${ other_parties[0].address.line_two() }
+          % endif
       - "other_parties1_birthdate": |
           % if other_parties[0].person_type == "ALIndividual":
           ${ format_date_if_defined("other_parties[0].birthdate", format="M/d/yyyy") }
