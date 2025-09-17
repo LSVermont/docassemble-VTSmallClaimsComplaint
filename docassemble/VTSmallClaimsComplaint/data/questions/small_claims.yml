@@ -779,15 +779,13 @@ review:
   - Edit: other_parties.revisit
     button: |
       % for item in other_parties:
-      **${ item.name }**
-
-      % if item.person_type == "ALIndividual":
-      Birthdate:
+      **${ item }**
+      
       % if defined("item.birthdate"):
+      Birthdate:
       ${ item.birthdate }
       % else:
       Unknown
-      % endif
       % endif
       
       Address:
@@ -939,7 +937,7 @@ table: other_parties.table
 rows: other_parties
 columns:
   - Name: |
-      row_item.name.full() if defined("row_item.name.first") else ""
+      row_item.name if defined("row_item.name.first") else ""
   - Birthdate: |
       row_item.birthdate if defined("row_item.birthdate") else ""
   - Address: |
@@ -950,7 +948,6 @@ edit:
   - name.first
   - birthdate
   - address.address
-  - mailing_address.address
 confirm: True
 ---
 code: |
@@ -1101,8 +1098,8 @@ code: |
   VT_small_claims_complaint_attachment.overflow_fields['other_parties'].label = "Additional defendants:"
   VT_small_claims_complaint_attachment.overflow_fields['other_parties'].headers = [
     {"name": "Name"},
-    {"birthdate": "Birthdate"},
     {"mailing_address": "Address"},
+    {"birthdate": "Birthdate"}
   ]
   VT_small_claims_complaint_attachment.overflow_fields.gathered = True  
 ---
