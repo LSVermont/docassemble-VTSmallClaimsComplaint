@@ -780,11 +780,13 @@ review:
     button: |
       % for item in other_parties:
       **${ item }**
-      
+
+      % if item.person_type == "ALIndividual":
       % if item.attribute_defined('birthdate'):
       Birthdate: ${ item.birthdate }
       % else:
       Birthdate: Unknown
+      % endif
       % endif
       
       Address:
