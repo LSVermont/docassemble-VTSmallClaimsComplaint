@@ -780,19 +780,20 @@ review:
     button: |
       % for item in other_parties:
       **${ item }**
-      
-      % if defined("item.birthdate"):
-      Birthdate:
-      ${ item.birthdate }
+
+      % if item.person_type == "ALIndividual":
+      % if item.attribute_defined('birthdate'):
+      Birthdate: ${ item.birthdate }
       % else:
-      Unknown
+      Birthdate: Unknown
+      % endif
       % endif
       
       Address:
       
       ${ item.address }
 
-      % if defined("item.mailing_address"):
+      % if item.mailing_address.attribute_defined('city'):
       Mailing address:
       
       ${ item.mailing_address }
@@ -1095,12 +1096,13 @@ attachment:
 ---
 code: |
   VT_small_claims_complaint_attachment.overflow_fields['other_parties'].overflow_trigger = 1
-  VT_small_claims_complaint_attachment.overflow_fields['other_parties'].label = "Additional defendants:"
+  VT_small_claims_complaint_attachment.overflow_fields['other_parties'].label = "Additional defendants"
   VT_small_claims_complaint_attachment.overflow_fields['other_parties'].headers = [
-    {"name": "Name"},
-    {"mailing_address": "Address"},
-    {"birthdate": "Birthdate"}
-  ]
+    {'name': "Name"},
+    {'address': "Address"},
+    {'mailing_address': "Mailing address"},
+    {'birthdate': "Birthdate"},
+  ]  
   VT_small_claims_complaint_attachment.overflow_fields.gathered = True  
 ---
 attachments:
