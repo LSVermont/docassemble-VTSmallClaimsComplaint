@@ -1,3 +1,30 @@
 [build-system]
-requires = ["setuptools"]
+requires = [
+    "setuptools==80.9.0",
+]
 build-backend = "setuptools.build_meta"
+
+[project]
+name = "docassemble.VTSmallClaimsComplaint"
+version = "0.1"
+description = "Small claims complaint - Vermont - Form 100-00257"
+readme = "README.md"
+dependencies = [
+    "docassemble.ALToolbox @ git+https://github.com/SuffolkLITLab/docassemble-ALToolbox.git@main",
+    "docassemble.AssemblyLine @ git+https://github.com/SuffolkLITLab/docassemble-AssemblyLine.git@main",
+    "docassemble.GithubFeedbackForm @ git+https://github.com/SuffolkLITLab/docassemble-GithubFeedbackForm.git@main",
+    "docassemble.VTFeedback @ git+https://github.com/VTskier/docassemble-VTFeedback.git@main",
+    "docassemble.VTSharedYMLFile @ git+https://github.com/LSVermont/docassemble-VTSharedYMLFile.git@main",
+]
+
+[[project.authors]]
+name = "Guided interview by Legal Services Vermont / VTCourtForms"
+email = "ksurette@legalservicesvt.org"
+
+[project.urls]
+Homepage = "https://VTLawHelp.org/VTCourtForms"
+
+[tool.setuptools.packages.find]
+where = [
+    ".",
+]
