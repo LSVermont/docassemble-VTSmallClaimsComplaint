@@ -260,7 +260,7 @@ question: |
 subquestion: | 
   To use this tool, you will need to:
 
-  - read about the full small claims process on the [Small Claims Roadmap on VTLawHelp.org](https://vtlawhelp.org/roadmap/small-claims/step-1).
+  - read about the full small claims process on the [Small Claims Roadmap on VTLawHelp.org](https://vtlawhelp.org/roadmap/small-claims/step-1)
   - know the name and address of the person, business or organization that you want to sue for $10,000 or less
   - make a list of each reason they owe you money or caused you to lose money. These are your “damages.”
   - come up with a total amount you want to sue for (You can include more than one dispute with the same defendant in your lawsuit, if the total amount you are asking for is $10,000 or less.)
@@ -268,6 +268,8 @@ subquestion: |
   - or, be prepared to submit a fee waiver form to the court at the same time that you submit your Small Claims Complaint. See the [Small Claims Roadmap](https://vtlawhelp.org/roadmap/small-claims/step-2) for details.
 
   Ask for general help with court forms or the court process by contacting the [Vermont Judiciary Access and Resource Center](https://www.vermontjudiciary.org/self-help/ARC). Their services are free and they serve the whole state. They do NOT give legal advice.
+
+  ${ collapse_template(asterisk) }
 
   <h4>Our terms of use</h4>
 fields:
