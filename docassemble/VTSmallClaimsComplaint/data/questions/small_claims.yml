@@ -533,8 +533,8 @@ fields:
   - Zip or postal code: other_parties[i].address.zip
     required: False
 
-  - Does ${ other_parties[i] } have a mailing address that is different from their street address?: other_parties[i].mailing_address_different
-    datatype: yesnoradio
+  - ${ other_parties[i] } has a mailing address that is different from their street address: other_parties[i].mailing_address_different
+    datatype: yesno
   - Mailing address: other_parties[i].mailing_address.address
     address autocomplete: True
     show if: other_parties[i].mailing_address_different
