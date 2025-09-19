@@ -224,7 +224,7 @@ code: |
       data={
           "zip": showifdef("users[0].address.zip"),
           "county_where_filing": showifdef("trial_court.address.county"),
-        	"user_has_attorney": showifdef("user_has_attorney"),
+          "user_has_attorney": showifdef("user_has_attorney"),
       	  "1st_OP_is_person_or_business": showifdef("other_parties[0].person_type"),
           "claim_principal": showifdef("claim_principal"),
       	  "claim_interest": showifdef("claim_interest"), 
