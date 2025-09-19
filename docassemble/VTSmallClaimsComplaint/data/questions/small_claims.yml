@@ -220,11 +220,18 @@ code: |
   
   # Store anonymous data for analytics / statistics
   store_variables_snapshot(
-    persistent=True,
-    data={
-        "zip": showifdef("users[0].address.zip"),
-        "reached_interview_end": True,
-    },
+      persistent=True,
+      data={
+          "zip": showifdef("users[0].address.zip"),
+          "county_where_filing": showifdef("trial_court.address.county"),
+        	"user_has_attorney": showifdef("user_has_attorney"),
+      	  "1st_OP_is_person_or_business": showifdef("other_parties[0].person_type"),
+          "claim_principal": showifdef("claim_principal"),
+      	  "claim_interest": showifdef("claim_interest"), 
+      	  "claim_court_fee": showifdef("claim_court_fee"),
+          "reached_interview_end": True,
+          "num_forms": len(al_user_bundle.enabled_documents()),
+      },
   )
   nav.set_section("get_docs")
   VT_small_claims_complaint_download
