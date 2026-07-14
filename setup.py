@@ -44,7 +44,7 @@ def find_package_data(where='.', package='', exclude=standard_exclude, exclude_d
     return out
 
 setup(name='docassemble.VTSmallClaimsComplaint',
-      version='0.1',
+      version='1.2',
       description=('Small claims complaint - Vermont - Form 100-00257'),
       long_description='# docassemble.VTSmallClaimsComplaint\r\nSmall claims complaint - 100-00257\r\n\r\n## Author\r\nGuided interview by Legal Services Vermont / VTLawHelp.org website\r\n',
       long_description_content_type='text/markdown',
@@ -53,7 +53,7 @@ setup(name='docassemble.VTSmallClaimsComplaint',
       license='',
       url='https://VTLawHelp.org/VTCourtForms',
       packages=find_namespace_packages(),
-      install_requires=['docassemble.ALToolbox @ git+https://github.com/SuffolkLITLab/docassemble-ALToolbox.git@main', 'docassemble.AssemblyLine @ git+https://github.com/SuffolkLITLab/docassemble-AssemblyLine.git@main', 'docassemble.GithubFeedbackForm @ git+https://github.com/SuffolkLITLab/docassemble-GithubFeedbackForm.git@main', 'docassemble.VTFeedback @ git+https://github.com/VTskier/docassemble-VTFeedback.git@main'],
+      install_requires=['docassemble.ALToolbox @ git+https://github.com/SuffolkLITLab/docassemble-ALToolbox.git@main', 'docassemble.AssemblyLine @ git+https://github.com/SuffolkLITLab/docassemble-AssemblyLine.git@main', 'docassemble.GithubFeedbackForm @ git+https://github.com/SuffolkLITLab/docassemble-GithubFeedbackForm.git@main', 'docassemble.VTFeedback @ git+https://github.com/VTskier/docassemble-VTFeedback.git@main', 'docassemble.VTSharedYMLFile @ git+https://github.com/LSVermont/docassemble-VTSharedYMLFile.git@main'],
       zip_safe=False,
       package_data=find_package_data(where='docassemble/VTSmallClaimsComplaint/', package='docassemble.VTSmallClaimsComplaint'),
      )
