@@ -215,8 +215,9 @@ code: |
   
   nav.set_section("sign")
   set_progress(95)
-  signature_date
+  ask_about_representative_signature = True
   al_form_requires_digital_signature = False
+  signature_date
   basic_questions_signature_flow
   VT_end_time
   elapsed
@@ -861,7 +862,25 @@ review:
     button: |
       **Date of the signature on the Complaint**:
       ${ signature_date }
+  - Edit: signature_choice
+    button: |
+      **Your documents are almost ready**
 
+      % if al_form_requires_digital_signature and not ( device() and (device().is_mobile or device().is_touch_capable) ):
+      I will sign <span class='visually-hidden'>desktop</span>: ${ showifdef('signature_choice') }
+      % endif
+
+      % if al_form_requires_digital_signature and ( device() and (device().is_mobile or device().is_touch_capable) ):
+      I will sign <span class='visually-hidden'>mobile</span>: ${ showifdef('signature_choice') }
+      % endif
+
+      % if not al_form_requires_digital_signature and not ( device() and (device().is_mobile or device().is_touch_capable) ):
+      I will sign <span class='visually-hidden'>desktop with print</span>: ${ showifdef('signature_choice') }
+      % endif
+
+      % if not al_form_requires_digital_signature and ( device() and (device().is_mobile or device().is_touch_capable) ):
+      I will sign <span class='visually-hidden'>mobile with print</span>: ${ showifdef('signature_choice') }
+      % endif
   - Edit: documents_attached_to_complaint
     button: |
       **You are including supporting documents with your Small Claims Complaint now**: ${ word(yesno(documents_attached_to_complaint)) }
@@ -964,32 +983,32 @@ edit:
   - address.address
 confirm: True
 ---
-code: |
-  default_printed_signature = users[0].name
+#code: |
+#  default_printed_signature = users[0].name
 ---
-id: signing your forms
-question: |
-  Signature date
-fields:
-  - "This is how the name will appear under the signature.": printed_signature
-    default: |
-      ${ default_printed_signature }
-    maxlength: 34
-    required: False
-
-  - note: |
-      If you said you have a lawyer, and you want them to sign the form, you can edit the name above.
-    show if: attorneys[0].name.first ! = ""
-    
-  - "Date of the signature for the Complaint form": signature_date
-    datatype: date
-    required: False
-    default: |
-      ${ today() }
-  -  note: |
-       You can change this date later if you want.
-       
-       **Tap Next to choose how to sign your documents.**
+#id: signing your forms
+#question: |
+#  Signature date
+#fields:
+#  - "This is how the name will appear under the signature.": printed_signature
+#    default: |
+#      ${ default_printed_signature }
+#    maxlength: 34
+#    required: False
+#
+#  - note: |
+#      If you said you have a lawyer, and you want them to sign the form, you can edit the name above.
+#    show if: attorneys[0].name.first ! = ""
+#    
+#  - "Date of the signature for the Complaint form": signature_date
+#    datatype: date
+#    required: False
+#    default: |
+#      ${ today() }
+#  -  note: |
+#       You can change this date later if you want.
+#       
+#       **Tap Next to choose how to sign your documents.**
 ---
 id: signature choice
 decoration: file-signature
@@ -998,22 +1017,64 @@ question: |
 subquestion: |
   How do you want to sign them?
 fields: 
-  - I will sign: signature_choice
+  - "I will sign <span class='visually-hidden'>desktop</span>": signature_choice
     input type: radio
     choices:
-      - On my computer or phone: this_device
+      - On this device: this_device
+      - With a typed signature, like "${ al_typed_signature_prefix }${ slash_s_example_name }": typed_signature
+      - On a phone with my finger: phone
+        help: |
+          % if is_sms_enabled():
+          We can text or share a link with your phone on the next screen. WARNING: This will make your answers and forms visible on that phone.
+          % else:
+          We can share a link with your phone on the next screen. WARNING: This will make your answers and forms visible on that phone.
+          % endif
     show if:
       code: |
-        al_form_requires_digital_signature
-  - I will sign: signature_choice
+        al_form_requires_digital_signature and not (
+          device() and (device().is_mobile or device().is_touch_capable)
+        )
+  - "I will sign <span class='visually-hidden'>mobile</span>": signature_choice
     input type: radio
     choices:
-      - On my computer or phone: this_device
+      - On this device: this_device
+      - With a typed signature, like "${ al_typed_signature_prefix }${ slash_s_example_name }": typed_signature
+    show if:
+      code: |
+        al_form_requires_digital_signature and (
+          device() and (device().is_mobile or device().is_touch_capable)
+        )
+  - "I will sign <span class='visually-hidden'>desktop with print</span>": signature_choice
+    input type: radio
+    choices:
+      - On this device: this_device
+      - With a typed signature, like "${ al_typed_signature_prefix }${ slash_s_example_name }": typed_signature
+      - On the paper with a pen after I print the documents: sign_after_printing
+      - On a phone with my finger: phone
+        help: |
+          % if is_sms_enabled():
+          We can text or share a link with your phone on the next screen. WARNING: This will make your answers and forms visible on that phone.
+          % else:
+          We can share a link with your phone on the next screen. WARNING: This will make your answers and forms visible on that phone.
+
+          % endif
+    show if:
+      code: |
+        not al_form_requires_digital_signature and not (
+          device() and (device().is_mobile or device().is_touch_capable)
+        )
+  - "I will sign <span class='visually-hidden'>mobile with print</span>": signature_choice
+    input type: radio
+    choices:
+      - On this device: this_device
+      - With a typed signature, like "${ al_typed_signature_prefix }${ slash_s_example_name }": typed_signature
       - On the paper with a pen after I print the documents: sign_after_printing
     show if:
       code: |
-        not al_form_requires_digital_signature
-continue button field: saw_signature_choice    
+        not al_form_requires_digital_signature and (
+          device() and (device().is_mobile or device().is_touch_capable)
+        )
+continue button field: saw_signature_choice 
 ---
 id: persons signature
 generic object: ALIndividual
@@ -1181,7 +1242,7 @@ attachments:
       - "claim_amount_total": ${ "{:.2f}".format((claim_principal + claim_interest + (claim_court_fee if wants_to_claim_court_fee else 0))) }
       - "complaint_description": ${ complaint_description }
       - "signature_date": ${ signature_date }
-      - "users1_name_1": ${ printed_signature }
+      - "printed_signature": ${ printed_signature }
       - "users1_signature": ${ users[0].signature }
         
   - name: VT small claims certificate of service attachment
