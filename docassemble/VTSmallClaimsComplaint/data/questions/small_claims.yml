@@ -860,27 +860,18 @@ review:
       Small claims court in ${ user_selected_county } County
   - Edit: signature_date
     button: |
-      **Date of the signature on the Complaint**:
-      ${ signature_date }
-  - Edit: signature_choice
+      **About your signature**
+      
+      Date of the signature: ${ signature_date }
+  - Edit:
+      - printed_signature
+      - recompute:
+        - users[0].signature
     button: |
-      **Your documents are almost ready**
+      ${ showifdef('printed_signature') }
 
-      % if al_form_requires_digital_signature and not ( device() and (device().is_mobile or device().is_touch_capable) ):
-      I will sign <span class='visually-hidden'>desktop</span>: ${ showifdef('signature_choice') }
-      % endif
+      ${ showifdef('users[0].signature') }
 
-      % if al_form_requires_digital_signature and ( device() and (device().is_mobile or device().is_touch_capable) ):
-      I will sign <span class='visually-hidden'>mobile</span>: ${ showifdef('signature_choice') }
-      % endif
-
-      % if not al_form_requires_digital_signature and not ( device() and (device().is_mobile or device().is_touch_capable) ):
-      I will sign <span class='visually-hidden'>desktop with print</span>: ${ showifdef('signature_choice') }
-      % endif
-
-      % if not al_form_requires_digital_signature and ( device() and (device().is_mobile or device().is_touch_capable) ):
-      I will sign <span class='visually-hidden'>mobile with print</span>: ${ showifdef('signature_choice') }
-      % endif
   - Edit: documents_attached_to_complaint
     button: |
       **You are including supporting documents with your Small Claims Complaint now**: ${ word(yesno(documents_attached_to_complaint)) }
@@ -922,7 +913,6 @@ edit:
   - name.first
   - birthdate
   - address.address
-  - mailing_address.address
   - email
   - phone_number
   - work_phone_number
@@ -1281,7 +1271,8 @@ attachments:
       - "mailed_info_and_instructions_for_defendant": Yes
       - "mailed_blank_answer_form": Yes
       - "mailed_documents_attached_to_complaint": ${ documents_attached_to_complaint }
-      - "COS_signer_name": ${ attorneys[0] if user_has_attorney else users[0] }
+      - "COS_printed_signature": ${ attorneys[0] if user_has_attorney else printed_signature }
+      - "users1_signature": ${ users[0].signature }
       - "COS_mailing_address_line_one": |
           % if defined("users[0].mailing_address.address"):
           ${ attorneys[0].address.line_one() if user_has_attorney else users[0].mailing_address.line_one() }
