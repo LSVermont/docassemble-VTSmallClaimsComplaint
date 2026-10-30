@@ -215,8 +215,9 @@ code: |
   
   nav.set_section("sign")
   set_progress(95)
-  signature_date
+  ask_about_representative_signature = True
   al_form_requires_digital_signature = False
+  signature_date
   basic_questions_signature_flow
   VT_end_time
   elapsed
@@ -964,32 +965,32 @@ edit:
   - address.address
 confirm: True
 ---
-code: |
-  default_printed_signature = users[0].name
+#code: |
+#  default_printed_signature = users[0].name
 ---
-id: signing your forms
-question: |
-  Signature date
-fields:
-  - "This is how the name will appear under the signature.": printed_signature
-    default: |
-      ${ default_printed_signature }
-    maxlength: 34
-    required: False
-
-  - note: |
-      If you said you have a lawyer, and you want them to sign the form, you can edit the name above.
-    show if: attorneys[0].name.first ! = ""
-    
-  - "Date of the signature for the Complaint form": signature_date
-    datatype: date
-    required: False
-    default: |
-      ${ today() }
-  -  note: |
-       You can change this date later if you want.
-       
-       **Tap Next to choose how to sign your documents.**
+#id: signing your forms
+#question: |
+#  Signature date
+#fields:
+#  - "This is how the name will appear under the signature.": printed_signature
+#    default: |
+#      ${ default_printed_signature }
+#    maxlength: 34
+#    required: False
+#
+#  - note: |
+#      If you said you have a lawyer, and you want them to sign the form, you can edit the name above.
+#    show if: attorneys[0].name.first ! = ""
+#    
+#  - "Date of the signature for the Complaint form": signature_date
+#    datatype: date
+#    required: False
+#    default: |
+#      ${ today() }
+#  -  note: |
+#       You can change this date later if you want.
+#       
+#       **Tap Next to choose how to sign your documents.**
 ---
 id: signature choice
 decoration: file-signature
