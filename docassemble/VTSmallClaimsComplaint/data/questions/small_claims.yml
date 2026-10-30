@@ -149,6 +149,7 @@ code: |
   
   nav.set_section('intro')
   VT_small_claims_intro
+  VT_start_time
   important_notes_to_user
   set_progress(5)
   
@@ -217,6 +218,8 @@ code: |
   signature_date
   al_form_requires_digital_signature = False
   basic_questions_signature_flow
+  VT_end_time
+  elapsed
   
   # Store anonymous data for analytics / statistics
   store_variables_snapshot(
