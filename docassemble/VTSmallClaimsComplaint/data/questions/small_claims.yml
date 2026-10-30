@@ -1242,7 +1242,7 @@ attachments:
       - "claim_amount_total": ${ "{:.2f}".format((claim_principal + claim_interest + (claim_court_fee if wants_to_claim_court_fee else 0))) }
       - "complaint_description": ${ complaint_description }
       - "signature_date": ${ signature_date }
-      - "users1_name_1": ${ printed_signature }
+      - "printed_signature": ${ printed_signature }
       - "users1_signature": ${ users[0].signature }
         
   - name: VT small claims certificate of service attachment
