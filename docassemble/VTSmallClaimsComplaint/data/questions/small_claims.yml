@@ -862,7 +862,25 @@ review:
     button: |
       **Date of the signature on the Complaint**:
       ${ signature_date }
+  - Edit: signature_choice
+    button: |
+      **Your documents are almost ready**
 
+      % if al_form_requires_digital_signature and not ( device() and (device().is_mobile or device().is_touch_capable) ):
+      I will sign <span class='visually-hidden'>desktop</span>: ${ showifdef('signature_choice') }
+      % endif
+
+      % if al_form_requires_digital_signature and ( device() and (device().is_mobile or device().is_touch_capable) ):
+      I will sign <span class='visually-hidden'>mobile</span>: ${ showifdef('signature_choice') }
+      % endif
+
+      % if not al_form_requires_digital_signature and not ( device() and (device().is_mobile or device().is_touch_capable) ):
+      I will sign <span class='visually-hidden'>desktop with print</span>: ${ showifdef('signature_choice') }
+      % endif
+
+      % if not al_form_requires_digital_signature and ( device() and (device().is_mobile or device().is_touch_capable) ):
+      I will sign <span class='visually-hidden'>mobile with print</span>: ${ showifdef('signature_choice') }
+      % endif
   - Edit: documents_attached_to_complaint
     button: |
       **You are including supporting documents with your Small Claims Complaint now**: ${ word(yesno(documents_attached_to_complaint)) }
@@ -999,22 +1017,64 @@ question: |
 subquestion: |
   How do you want to sign them?
 fields: 
-  - I will sign: signature_choice
+  - "I will sign <span class='visually-hidden'>desktop</span>": signature_choice
     input type: radio
     choices:
-      - On my computer or phone: this_device
+      - On this device: this_device
+      - With a typed signature, like "${ al_typed_signature_prefix }${ slash_s_example_name }": typed_signature
+      - On a phone with my finger: phone
+        help: |
+          % if is_sms_enabled():
+          We can text or share a link with your phone on the next screen. WARNING: This will make your answers and forms visible on that phone.
+          % else:
+          We can share a link with your phone on the next screen. WARNING: This will make your answers and forms visible on that phone.
+          % endif
     show if:
       code: |
-        al_form_requires_digital_signature
-  - I will sign: signature_choice
+        al_form_requires_digital_signature and not (
+          device() and (device().is_mobile or device().is_touch_capable)
+        )
+  - "I will sign <span class='visually-hidden'>mobile</span>": signature_choice
     input type: radio
     choices:
-      - On my computer or phone: this_device
+      - On this device: this_device
+      - With a typed signature, like "${ al_typed_signature_prefix }${ slash_s_example_name }": typed_signature
+    show if:
+      code: |
+        al_form_requires_digital_signature and (
+          device() and (device().is_mobile or device().is_touch_capable)
+        )
+  - "I will sign <span class='visually-hidden'>desktop with print</span>": signature_choice
+    input type: radio
+    choices:
+      - On this device: this_device
+      - With a typed signature, like "${ al_typed_signature_prefix }${ slash_s_example_name }": typed_signature
+      - On the paper with a pen after I print the documents: sign_after_printing
+      - On a phone with my finger: phone
+        help: |
+          % if is_sms_enabled():
+          We can text or share a link with your phone on the next screen. WARNING: This will make your answers and forms visible on that phone.
+          % else:
+          We can share a link with your phone on the next screen. WARNING: This will make your answers and forms visible on that phone.
+
+          % endif
+    show if:
+      code: |
+        not al_form_requires_digital_signature and not (
+          device() and (device().is_mobile or device().is_touch_capable)
+        )
+  - "I will sign <span class='visually-hidden'>mobile with print</span>": signature_choice
+    input type: radio
+    choices:
+      - On this device: this_device
+      - With a typed signature, like "${ al_typed_signature_prefix }${ slash_s_example_name }": typed_signature
       - On the paper with a pen after I print the documents: sign_after_printing
     show if:
       code: |
-        not al_form_requires_digital_signature
-continue button field: saw_signature_choice    
+        not al_form_requires_digital_signature and (
+          device() and (device().is_mobile or device().is_touch_capable)
+        )
+continue button field: saw_signature_choice 
 ---
 id: persons signature
 generic object: ALIndividual
